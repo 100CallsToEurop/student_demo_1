@@ -45,6 +45,13 @@ const posts: Array<PostViewModel> = [
     {id: 5, title: 'About JS - 05', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 5, bloggerName: 'it-incubator.eu'},
 ]
 
+function errorHandler(value: string, limit: number, arrError: Array<FieldError>){
+    if(value.length > limit) return arrError.push({
+        message: `Field ${value} exceeded limit ${limit}`,
+        field: `${value}`
+    })
+    return arrError
+}
 
 const app = express()
 
@@ -162,13 +169,14 @@ app.delete('/posts/:id',(req: Request, res: Response)=>{
 })
 app.post('/posts', (req: Request, res: Response) => {
     const {title, shortDescription, content, bloggerId }:PostInputModel  = req.body
+    const error: Array<FieldError> = []
     if(title && shortDescription && content && bloggerId) {
-        if(title.length > 30 || shortDescription.length > 100 || content.length > 1000){
+        errorHandler(title, 30, error)
+        errorHandler(shortDescription, 100, error)
+        errorHandler(content, 1000, error)
+        if(error.length > 0){
             const errorMessage: APIErrorResult = {
-                errorsMessages: [{
-                    message: "Field title not found",
-                    field: "title"
-                }]
+                errorsMessages: error
             }
             res.status(400).send(errorMessage)
         }
@@ -205,6 +213,7 @@ app.post('/posts', (req: Request, res: Response) => {
         res.status(400).send(errorMessage)
     }
 })
+
 app.put('/posts/:id',(req: Request, res: Response)=>{
     const {title, shortDescription, content, bloggerId }:PostInputModel  = req.body
     if(title && shortDescription && content && bloggerId) {
