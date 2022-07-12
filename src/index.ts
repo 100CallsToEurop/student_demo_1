@@ -53,7 +53,7 @@ function errorExp(value: string, valueFact: string, arrError: Array<FieldError>)
     return arrError
 }
 function errorHandler(value: string, valueFact: string, limit: number, arrError: Array<FieldError>){
-    if(!value || value.length > limit || value === "" || !value.trim().length) return arrError.push({
+    if(!value || value.length > limit || value === "" || value.trim().length) return arrError.push({
         message: `Field ${valueFact} error`,
         field: `${valueFact}`
     })
