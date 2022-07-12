@@ -47,8 +47,8 @@ const posts: Array<PostViewModel> = [
 
 function errorHandler(value: string, valueFact: string, limit: number, arrError: Array<FieldError>){
     if(!value || value.length > limit) return arrError.push({
-        message: `Field ${value} error`,
-        field: `${value}`
+        message: `Field ${valueFact} error`,
+        field: `${valueFact}`
     })
     return arrError
 }
