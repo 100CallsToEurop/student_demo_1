@@ -68,7 +68,8 @@ app.use(parserMiddleware)
 
 //bloggers
 app.get('/bloggers', (req: Request, res: Response)=>{
-    res.status(200).send(bloggers)
+    if(bloggers) res.status(200).send(bloggers)
+    res.status(404).send('Not found')
 })
 app.get('/bloggers/:id', (req: Request, res: Response) => {
     const id: number = +req.params.id;
@@ -78,6 +79,7 @@ app.get('/bloggers/:id', (req: Request, res: Response) => {
 })
 app.delete('/bloggers/:id',(req: Request, res: Response)=>{
     const id: number = +req.params.id;
+    console.log(req.params.id)
     if(id) {
         for (let i = 0; i < bloggers.length; i++) {
             if (bloggers[i].id === id) {
@@ -134,7 +136,8 @@ app.put('/bloggers/:id',(req: Request, res: Response)=>{
 
 //posts
 app.get('/posts', (req: Request, res: Response)=>{
-    res.status(200).send(posts)
+    if(posts) res.status(200).send(posts)
+    res.status(404).send('Not found')
 })
 
 //400 Bad Request - Доделать
