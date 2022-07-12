@@ -30,20 +30,21 @@ type PostViewModel = {
 const parserMiddleware = bodyParser({})
 const port = process.env.PORT || 5000
 const bloggers: Array<BloggerViewModel> = [
-    /*{id: 1, name: 'About JS - 01', youtubeUrl: 'https://yandex.ru'},
+    {id: 1, name: 'About JS - 01', youtubeUrl: 'https://yandex.ru'},
     {id: 2, name: 'About JS - 02', youtubeUrl: 'https://yandex.ru'},
     {id: 3, name: 'About JS - 03', youtubeUrl: 'https://yandex.ru'},
     {id: 4, name: 'About JS - 04', youtubeUrl: 'https://yandex.ru'},
-    {id: 5, name: 'About JS - 05', youtubeUrl: 'https://yandex.ru'},*/
+    {id: 5, name: 'About JS - 05', youtubeUrl: 'https://yandex.ru'},
 ]
 
 const posts: Array<PostViewModel> = [
-  /*  {id: 1, title: 'About JS - 01', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 1, bloggerName: 'it-incubator.eu'},
+    {id: 1, title: 'About JS - 01', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 1, bloggerName: 'it-incubator.eu'},
     {id: 2, title: 'About JS - 02', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 2, bloggerName: 'it-incubator.eu'},
     {id: 3, title: 'About JS - 03', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 3, bloggerName: 'it-incubator.eu'},
     {id: 4, title: 'About JS - 04', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 4, bloggerName: 'it-incubator.eu'},
     {id: 5, title: 'About JS - 05', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 5, bloggerName: 'it-incubator.eu'},
-*/]
+]
+
 
 function errorHandler(value: string, valueFact: string, limit: number, arrError: Array<FieldError>){
     const exp = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
@@ -183,7 +184,7 @@ app.post('/posts', (req: Request, res: Response) => {
                     field: "bloggerId"
                 }]
             }
-            res.status(400).send(errorMessage)
+            res.status(404).send(errorMessage)
         }
         const newPost: PostViewModel = {
             id: +(new Date()),
@@ -221,7 +222,7 @@ app.put('/posts/:id',(req: Request, res: Response)=>{
                     field: "bloggerId"
                 }]
             }
-            res.status(400).send(errorMessage)
+            res.status(404).send(errorMessage)
         }
         const id: number = +req.params.id;
         const post: PostViewModel | undefined = posts.find(p => p.id === id)
