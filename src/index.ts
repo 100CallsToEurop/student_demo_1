@@ -82,13 +82,13 @@ app.delete('/bloggers/:id',(req: Request, res: Response)=>{
 app.post('/bloggers', (req: Request, res: Response) => {
     const {name, youtubeUrl }:BloggerInputModel  = req.body
     const exp = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
+    const error: Array<FieldError> = []
     if(name && youtubeUrl) {
-        if(name.length > 15 || youtubeUrl.length > 100 || !exp.test(youtubeUrl)){
+        errorHandler(name, 15, error)
+        errorHandler(youtubeUrl, 100, error)
+        if (error.length > 0 || !exp.test(youtubeUrl)) {
             const errorMessage: APIErrorResult = {
-                errorsMessages: [{
-                    message: "Field title not found",
-                    field: "title"
-                }]
+                errorsMessages: error
             }
             res.status(400).send(errorMessage)
         }
@@ -113,13 +113,13 @@ app.post('/bloggers', (req: Request, res: Response) => {
 app.put('/bloggers/:id',(req: Request, res: Response)=>{
     const {name, youtubeUrl }:BloggerInputModel  = req.body
     const exp = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
+    const error: Array<FieldError> = []
     if(name && youtubeUrl) {
-        if(name.length > 15 || youtubeUrl.length > 100 || !exp.test(youtubeUrl)){
+        errorHandler(name, 15, error)
+        errorHandler(youtubeUrl, 100, error)
+        if (error.length > 0 || !exp.test(youtubeUrl)) {
             const errorMessage: APIErrorResult = {
-                errorsMessages: [{
-                    message: "Field title not found",
-                    field: "title"
-                }]
+                errorsMessages: error
             }
             res.status(400).send(errorMessage)
         }
@@ -216,15 +216,18 @@ app.post('/posts', (req: Request, res: Response) => {
 
 app.put('/posts/:id',(req: Request, res: Response)=>{
     const {title, shortDescription, content, bloggerId }:PostInputModel  = req.body
+    const error: Array<FieldError> = []
     if(title && shortDescription && content && bloggerId) {
-        if(title.length > 30 || shortDescription.length > 100 || content.length > 1000){
-            const errorMessage: APIErrorResult = {
-                errorsMessages: [{
-                    message: "Field title not found",
-                    field: "title"
-                }]
+        if(title && shortDescription && content && bloggerId) {
+            errorHandler(title, 30, error)
+            errorHandler(shortDescription, 100, error)
+            errorHandler(content, 1000, error)
+            if (error.length > 0) {
+                const errorMessage: APIErrorResult = {
+                    errorsMessages: error
+                }
+                res.status(400).send(errorMessage)
             }
-            res.status(400).send(errorMessage)
         }
         const blogger: BloggerViewModel | undefined = bloggers.find(b => b.id === +bloggerId)
         let bloggerName = ''
