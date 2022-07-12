@@ -54,7 +54,7 @@ function errorHandler(value: string, valueFact: string, limit: number, arrError:
         })
     }
 
-    if(!value || value.length > limit || value === "" || value.trim() === "") return arrError.push({
+    if(!value || value.length > limit || value === "" || value.trim() === "" || value === undefined) return arrError.push({
         message: `Field ${valueFact} error`,
         field: `${valueFact}`
     })
