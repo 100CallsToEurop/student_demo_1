@@ -184,7 +184,7 @@ app.post('/posts', (req: Request, res: Response) => {
                     field: "bloggerId"
                 }]
             }
-            res.status(404).send(errorMessage)
+            res.status(400).send(errorMessage)
         }
         const newPost: PostViewModel = {
             id: +(new Date()),
@@ -222,7 +222,7 @@ app.put('/posts/:id',(req: Request, res: Response)=>{
                     field: "bloggerId"
                 }]
             }
-            res.status(404).send(errorMessage)
+            res.status(400).send(errorMessage)
         }
         const id: number = +req.params.id;
         const post: PostViewModel | undefined = posts.find(p => p.id === id)
