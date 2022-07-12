@@ -77,12 +77,14 @@ app.get('/bloggers/:id', (req: Request, res: Response) => {
     res.status(200).send(blogger)
 })
 app.delete('/bloggers/:id',(req: Request, res: Response)=>{
-    const id: number = +req.params.id;
-    for(let i = 0; i < bloggers.length; i++){
-        if(bloggers[i].id === id) {
-            bloggers.splice(i, 1)
-            res.status(204).send('No Content')
-            return
+    if(+req.params.id) {
+        const id: number = +req.params.id;
+        for (let i = 0; i < bloggers.length; i++) {
+            if (bloggers[i].id === id) {
+                bloggers.splice(i, 1)
+                res.status(204).send('No Content')
+                return
+            }
         }
     }
     res.status(404).send('Not found')
@@ -143,12 +145,14 @@ app.get('/posts/:id', (req: Request, res: Response) => {
     res.status(200).send(post)
 })
 app.delete('/posts/:id',(req: Request, res: Response)=>{
-    const id: number = +req.params.id;
-    for(let i = 0; i < posts.length; i++){
-        if(posts[i].id === id) {
-            posts.splice(i, 1)
-            res.status(204).send('No Content')
-            return
+    if(+req.params.id) {
+        const id: number = +req.params.id;
+        for (let i = 0; i < posts.length; i++) {
+            if (posts[i].id === id) {
+                posts.splice(i, 1)
+                res.status(204).send('No Content')
+                return
+            }
         }
     }
     res.status(404).send('Not found')
