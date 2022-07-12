@@ -45,16 +45,8 @@ const posts: Array<PostViewModel> = [
     {id: 5, title: 'About JS - 05', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 5, bloggerName: 'it-incubator.eu'},
 ]
 
-function errorHandlerExist(value: string, valueFact: string, arrError: Array<FieldError>){
-    if(!value) return arrError.push({
-        message: `Field ${valueFact} error`,
-        field: `${valueFact}`
-    })
-    return arrError
-}
-
-function errorHandlerLimit(value: string, limit: number, arrError: Array<FieldError>){
-    if(value.length > limit) return arrError.push({
+function errorHandler(value: string, valueFact: string, limit: number, arrError: Array<FieldError>){
+    if(!value || value.length > limit) return arrError.push({
         message: `Field ${value} error`,
         field: `${value}`
     })
@@ -91,10 +83,8 @@ app.post('/bloggers', (req: Request, res: Response) => {
     const {name, youtubeUrl}:BloggerInputModel  = req.body
     const exp = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
     const error: Array<FieldError> = []
-    errorHandlerExist(name, 'name', error)
-    errorHandlerExist(youtubeUrl, 'youtubeUrl', error)
-    errorHandlerLimit(name, 15, error)
-    errorHandlerLimit(youtubeUrl, 100, error)
+    errorHandler(name, 'name',15, error)
+    errorHandler(youtubeUrl, 'youtubeUrl',100, error)
     if (error.length > 0 || !exp.test(youtubeUrl)) {
         const errorMessage: APIErrorResult = {
             errorsMessages: error
@@ -115,10 +105,8 @@ app.put('/bloggers/:id',(req: Request, res: Response)=>{
     const {name, youtubeUrl}:BloggerInputModel  = req.body
     const exp = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
     const error: Array<FieldError> = []
-    errorHandlerExist(name, 'name', error)
-    errorHandlerExist(youtubeUrl, 'youtubeUrl', error)
-    errorHandlerLimit(name, 15, error)
-    errorHandlerLimit(youtubeUrl, 100, error)
+    errorHandler(name, 'name',15, error)
+    errorHandler(youtubeUrl, 'youtubeUrl',100, error)
     if (error.length > 0 || !exp.test(youtubeUrl)) {
         const errorMessage: APIErrorResult = {
             errorsMessages: error
@@ -162,13 +150,9 @@ app.delete('/posts/:id',(req: Request, res: Response)=>{
 app.post('/posts', (req: Request, res: Response) => {
     const {title, shortDescription, content, bloggerId }:PostInputModel  = req.body
     const error: Array<FieldError> = []
-    errorHandlerExist(title, 'title', error)
-    errorHandlerExist(shortDescription, 'shortDescription', error)
-    errorHandlerExist(content, 'content', error)
-    errorHandlerExist(`${bloggerId}`, 'bloggerId', error)
-    errorHandlerLimit(title, 30, error)
-    errorHandlerLimit(shortDescription, 100, error)
-    errorHandlerLimit(content, 1000, error)
+    errorHandler(title, 'title',30, error)
+    errorHandler(shortDescription, 'shortDescription', 100, error)
+    errorHandler(content, 'content',1000, error)
     if(error.length > 0){
         const errorMessage: APIErrorResult = {
             errorsMessages: error
@@ -204,13 +188,9 @@ app.post('/posts', (req: Request, res: Response) => {
 app.put('/posts/:id',(req: Request, res: Response)=>{
     const {title, shortDescription, content, bloggerId }:PostInputModel  = req.body
     const error: Array<FieldError> = []
-    errorHandlerExist(title, 'title', error)
-    errorHandlerExist(shortDescription, 'shortDescription', error)
-    errorHandlerExist(content, 'content', error)
-    errorHandlerExist(`${bloggerId}`, 'bloggerId', error)
-    errorHandlerLimit(title, 30, error)
-    errorHandlerLimit(shortDescription, 100, error)
-    errorHandlerLimit(content, 1000, error)
+    errorHandler(title, 'title',30, error)
+    errorHandler(shortDescription, 'shortDescription', 100, error)
+    errorHandler(content, 'content',1000, error)
     if(error.length > 0){
         const errorMessage: APIErrorResult = {
             errorsMessages: error
