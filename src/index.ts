@@ -105,8 +105,9 @@ app.post('/bloggers', (req: Request, res: Response) => {
 })
 app.put('/bloggers/:id',(req: Request, res: Response)=>{
     const {name, youtubeUrl }:BloggerInputModel  = req.body
+    const exp = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
     if(name && youtubeUrl) {
-        if(name.length > 15 || youtubeUrl.length > 100){
+        if(name.length > 15 || youtubeUrl.length > 100 || !exp.test(youtubeUrl)){
             const errorMessage: APIErrorResult = {
                 errorsMessages: [{
                     message: "Field title not found",
