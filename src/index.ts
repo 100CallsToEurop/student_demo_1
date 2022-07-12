@@ -45,9 +45,17 @@ const posts: Array<PostViewModel> = [
     {id: 5, title: 'About JS - 05', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 5, bloggerName: 'it-incubator.eu'},
 ]
 
-function errorHandler(value: string, limit: number, arrError: Array<FieldError>){
+function errorHandlerExist(value: string, valueFact: string, arrError: Array<FieldError>){
+    if(!value) return arrError.push({
+        message: `Field ${valueFact} error`,
+        field: `${valueFact}`
+    })
+    return arrError
+}
+
+function errorHandlerLimit(value: string, limit: number, arrError: Array<FieldError>){
     if(value.length > limit) return arrError.push({
-        message: `Field ${value} exceeded limit ${limit}`,
+        message: `Field ${value} error`,
         field: `${value}`
     })
     return arrError
@@ -81,11 +89,11 @@ app.delete('/bloggers/:id',(req: Request, res: Response)=>{
 })
 app.post('/bloggers', (req: Request, res: Response) => {
     const {name, youtubeUrl }:BloggerInputModel  = req.body
-    const exp = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
-    const error: Array<FieldError> = []
     if(name && youtubeUrl) {
-        errorHandler(name, 15, error)
-        errorHandler(youtubeUrl, 100, error)
+        const exp = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
+        const error: Array<FieldError> = []
+        errorHandlerLimit(name, 15, error)
+        errorHandlerLimit(youtubeUrl, 100, error)
         if (error.length > 0 || !exp.test(youtubeUrl)) {
             const errorMessage: APIErrorResult = {
                 errorsMessages: error
@@ -101,22 +109,19 @@ app.post('/bloggers', (req: Request, res: Response) => {
         res.status(201).send(newBloger)
     }
     else{
-        const errorMessage: APIErrorResult = {
-            errorsMessages: [{
-                message: "Field title not found",
-                field: "title"
-            }]
-        }
-        res.status(400).send(errorMessage)
+        const errorExist: Array<FieldError> = []
+        errorHandlerExist(name, 'name', errorExist)
+        errorHandlerExist(youtubeUrl, 'youtubeUrl', errorExist)
+        res.status(400).send(errorExist)
     }
 })
 app.put('/bloggers/:id',(req: Request, res: Response)=>{
     const {name, youtubeUrl }:BloggerInputModel  = req.body
-    const exp = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
-    const error: Array<FieldError> = []
     if(name && youtubeUrl) {
-        errorHandler(name, 15, error)
-        errorHandler(youtubeUrl, 100, error)
+        const exp = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
+        const error: Array<FieldError> = []
+        errorHandlerLimit(name, 15, error)
+        errorHandlerLimit(youtubeUrl, 100, error)
         if (error.length > 0 || !exp.test(youtubeUrl)) {
             const errorMessage: APIErrorResult = {
                 errorsMessages: error
@@ -133,13 +138,10 @@ app.put('/bloggers/:id',(req: Request, res: Response)=>{
         res.status(404).send('NotFound')
     }
     else{
-        const errorMessage: APIErrorResult = {
-            errorsMessages: [{
-                message: "Field title not found",
-                field: "title"
-            }]
-        }
-        res.status(400).send(errorMessage)
+        const errorExist: Array<FieldError> = []
+        errorHandlerExist(name, 'name', errorExist)
+        errorHandlerExist(youtubeUrl, 'youtubeUrl', errorExist)
+        res.status(400).send(errorExist)
     }
 
 })
@@ -169,11 +171,11 @@ app.delete('/posts/:id',(req: Request, res: Response)=>{
 })
 app.post('/posts', (req: Request, res: Response) => {
     const {title, shortDescription, content, bloggerId }:PostInputModel  = req.body
-    const error: Array<FieldError> = []
     if(title && shortDescription && content && bloggerId) {
-        errorHandler(title, 30, error)
-        errorHandler(shortDescription, 100, error)
-        errorHandler(content, 1000, error)
+        const error: Array<FieldError> = []
+        errorHandlerLimit(title, 30, error)
+        errorHandlerLimit(shortDescription, 100, error)
+        errorHandlerLimit(content, 1000, error)
         if(error.length > 0){
             const errorMessage: APIErrorResult = {
                 errorsMessages: error
@@ -204,24 +206,23 @@ app.post('/posts', (req: Request, res: Response) => {
         res.status(201).send(newPost)
     }
     else{
-        const errorMessage: APIErrorResult = {
-            errorsMessages: [{
-                message: "Field title not found",
-                field: "title"
-            }]
-        }
-        res.status(400).send(errorMessage)
+        const errorExist: Array<FieldError> = []
+        errorHandlerExist(title, 'title', errorExist)
+        errorHandlerExist(shortDescription, 'shortDescription', errorExist)
+        errorHandlerExist(content, 'content', errorExist)
+        errorHandlerExist(`${bloggerId}`, 'bloggerId', errorExist)
+        res.status(400).send(errorExist)
     }
 })
 
 app.put('/posts/:id',(req: Request, res: Response)=>{
     const {title, shortDescription, content, bloggerId }:PostInputModel  = req.body
-    const error: Array<FieldError> = []
     if(title && shortDescription && content && bloggerId) {
+        const error: Array<FieldError> = []
         if(title && shortDescription && content && bloggerId) {
-            errorHandler(title, 30, error)
-            errorHandler(shortDescription, 100, error)
-            errorHandler(content, 1000, error)
+            errorHandlerLimit(title, 30, error)
+            errorHandlerLimit(shortDescription, 100, error)
+            errorHandlerLimit(content,1000, error)
             if (error.length > 0) {
                 const errorMessage: APIErrorResult = {
                     errorsMessages: error
@@ -254,13 +255,12 @@ app.put('/posts/:id',(req: Request, res: Response)=>{
         res.status(404).send('NotFound')
     }
     else{
-        const errorMessage: APIErrorResult = {
-            errorsMessages: [{
-                message: "Field title not found",
-                field: "title"
-            }]
-        }
-        res.status(400).send(errorMessage)
+        const errorExist: Array<FieldError> = []
+        errorHandlerExist(title, 'title', errorExist)
+        errorHandlerExist(shortDescription, 'shortDescription', errorExist)
+        errorHandlerExist(content, 'content', errorExist)
+        errorHandlerExist(`${bloggerId}`, 'bloggerId', errorExist)
+        res.status(400).send(errorExist)
     }
 
 })
