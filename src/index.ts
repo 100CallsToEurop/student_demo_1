@@ -172,8 +172,8 @@ app.post('/posts', (req: Request, res: Response) => {
         else {
             const errorMessage: APIErrorResult = {
                 errorsMessages: [{
-                    message: "Field title not found",
-                    field: "title"
+                    message: "Field bloggerId not found",
+                    field: "bloggerId"
                 }]
             }
             res.status(400).send(errorMessage)
@@ -210,8 +210,8 @@ app.put('/posts/:id',(req: Request, res: Response)=>{
         else {
             const errorMessage: APIErrorResult = {
                 errorsMessages: [{
-                    message: "Field title not found",
-                    field: "title"
+                    message: "Field bloggerId not found",
+                    field: "bloggerId"
                 }]
             }
             res.status(400).send(errorMessage)
