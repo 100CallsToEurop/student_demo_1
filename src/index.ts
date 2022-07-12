@@ -101,13 +101,15 @@ app.post('/bloggers', (req: Request, res: Response) => {
         }
         res.status(400).send(errorMessage)
     }
-    const newBloger: BloggerViewModel = {
-        id: +(new Date()),
-        name,
-        youtubeUrl
+    if(name && youtubeUrl) {
+        const newBloger: BloggerViewModel = {
+            id: +(new Date()),
+            name,
+            youtubeUrl
+        }
+        bloggers.push(newBloger)
+        res.status(201).send(newBloger)
     }
-    bloggers.push(newBloger)
-    res.status(201).send(newBloger)
 })
 app.put('/bloggers/:id',(req: Request, res: Response)=>{
     const {name, youtubeUrl}:BloggerInputModel  = req.body
@@ -123,13 +125,15 @@ app.put('/bloggers/:id',(req: Request, res: Response)=>{
         }
         res.status(400).send(errorMessage)
     }
-    const id: number = +req.params.id;
-    const blogger: BloggerViewModel | undefined = bloggers.find(b => b.id === id)
-    if (blogger) {
-        blogger.name = name, blogger.youtubeUrl = youtubeUrl
-        res.status(204).send(blogger)
+    if(name && youtubeUrl) {
+        const id: number = +req.params.id;
+        const blogger: BloggerViewModel | undefined = bloggers.find(b => b.id === id)
+        if (blogger) {
+            blogger.name = name, blogger.youtubeUrl = youtubeUrl
+            res.status(204).send(blogger)
+        }
+        res.status(404).send('NotFound')
     }
-    res.status(404).send('NotFound')
 })
 
 //posts
@@ -171,28 +175,30 @@ app.post('/posts', (req: Request, res: Response) => {
         }
         res.status(400).send(errorMessage)
     }
-    const blogger: BloggerViewModel | undefined = bloggers.find(b => b.id === +bloggerId)
-    let bloggerName = ''
-    if(blogger) bloggerName = blogger.name
-    else{
-        const errorMessage: APIErrorResult = {
-            errorsMessages: [{
-                message: "Field title not found",
-                field: "title"
-            }]
+    if(title && shortDescription && content && bloggerId) {
+        const blogger: BloggerViewModel | undefined = bloggers.find(b => b.id === +bloggerId)
+        let bloggerName = ''
+        if (blogger) bloggerName = blogger.name
+        else {
+            const errorMessage: APIErrorResult = {
+                errorsMessages: [{
+                    message: "Field title not found",
+                    field: "title"
+                }]
+            }
+            res.status(400).send(errorMessage)
         }
-        res.status(400).send(errorMessage)
+        const newPost: PostViewModel = {
+            id: +(new Date()),
+            title,
+            shortDescription,
+            content,
+            bloggerId: +bloggerId,
+            bloggerName: bloggerName
+        }
+        posts.push(newPost)
+        res.status(201).send(newPost)
     }
-    const newPost: PostViewModel = {
-        id: +(new Date()),
-        title,
-        shortDescription,
-        content,
-        bloggerId: +bloggerId,
-        bloggerName: bloggerName
-    }
-    posts.push(newPost)
-    res.status(201).send(newPost)
 })
 
 app.put('/posts/:id',(req: Request, res: Response)=>{
@@ -211,29 +217,31 @@ app.put('/posts/:id',(req: Request, res: Response)=>{
         }
         res.status(400).send(errorMessage)
     }
-    const blogger: BloggerViewModel | undefined = bloggers.find(b => b.id === +bloggerId)
-    let bloggerName = ''
-    if(blogger) bloggerName = blogger.name
-    else{
-        const errorMessage: APIErrorResult = {
-            errorsMessages: [{
-                message: "Field title not found",
-                field: "title"
-            }]
+    if(title && shortDescription && content && bloggerId) {
+        const blogger: BloggerViewModel | undefined = bloggers.find(b => b.id === +bloggerId)
+        let bloggerName = ''
+        if (blogger) bloggerName = blogger.name
+        else {
+            const errorMessage: APIErrorResult = {
+                errorsMessages: [{
+                    message: "Field title not found",
+                    field: "title"
+                }]
+            }
+            res.status(400).send(errorMessage)
         }
-        res.status(400).send(errorMessage)
+        const id: number = +req.params.id;
+        const post: PostViewModel | undefined = posts.find(p => p.id === id)
+        if (post) {
+            post.title = title;
+            post.shortDescription = shortDescription;
+            post.content = content;
+            post.bloggerId = bloggerId;
+            post.bloggerName = bloggerName;
+            res.status(204).send(post)
+        }
+        res.status(404).send('NotFound')
     }
-    const id: number = +req.params.id;
-    const post: PostViewModel | undefined = posts.find(p => p.id === id)
-    if (post) {
-        post.title = title;
-        post.shortDescription = shortDescription;
-        post.content = content;
-        post.bloggerId = bloggerId;
-        post.bloggerName = bloggerName;
-        res.status(204).send(post)
-    }
-    res.status(404).send('NotFound')
 })
 
 app.listen(port, ()=>{
