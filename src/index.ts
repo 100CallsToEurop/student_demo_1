@@ -88,62 +88,48 @@ app.delete('/bloggers/:id',(req: Request, res: Response)=>{
     res.status(404).send('Not found')
 })
 app.post('/bloggers', (req: Request, res: Response) => {
-    const {name, youtubeUrl }:BloggerInputModel  = req.body
-    if(name && youtubeUrl) {
-        const exp = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
-        const error: Array<FieldError> = []
-        errorHandlerLimit(name, 15, error)
-        errorHandlerLimit(youtubeUrl, 100, error)
-        if (error.length > 0 || !exp.test(youtubeUrl)) {
-            const errorMessage: APIErrorResult = {
-                errorsMessages: error
-            }
-            res.status(400).send(errorMessage)
+    const {name, youtubeUrl}:BloggerInputModel  = req.body
+    const exp = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
+    const error: Array<FieldError> = []
+    errorHandlerExist(name, 'name', error)
+    errorHandlerExist(youtubeUrl, 'youtubeUrl', error)
+    errorHandlerLimit(name, 15, error)
+    errorHandlerLimit(youtubeUrl, 100, error)
+    if (error.length > 0 || !exp.test(youtubeUrl)) {
+        const errorMessage: APIErrorResult = {
+            errorsMessages: error
         }
-        const newBloger: BloggerViewModel = {
-            id: +(new Date()),
-            name,
-            youtubeUrl
-        }
-        bloggers.push(newBloger)
-        res.status(201).send(newBloger)
+        res.status(400).send(errorMessage)
     }
-    else{
-        const errorExist: Array<FieldError> = []
-        errorHandlerExist(name, 'name', errorExist)
-        errorHandlerExist(youtubeUrl, 'youtubeUrl', errorExist)
-        res.status(400).send(errorExist)
+    const newBloger: BloggerViewModel = {
+        id: +(new Date()),
+        name,
+        youtubeUrl
     }
+    bloggers.push(newBloger)
+    res.status(201).send(newBloger)
 })
 app.put('/bloggers/:id',(req: Request, res: Response)=>{
-    const {name, youtubeUrl }:BloggerInputModel  = req.body
-    if(name && youtubeUrl) {
-        const exp = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
-        const error: Array<FieldError> = []
-        errorHandlerLimit(name, 15, error)
-        errorHandlerLimit(youtubeUrl, 100, error)
-        if (error.length > 0 || !exp.test(youtubeUrl)) {
-            const errorMessage: APIErrorResult = {
-                errorsMessages: error
-            }
-            res.status(400).send(errorMessage)
+    const {name, youtubeUrl}:BloggerInputModel  = req.body
+    const exp = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
+    const error: Array<FieldError> = []
+    errorHandlerExist(name, 'name', error)
+    errorHandlerExist(youtubeUrl, 'youtubeUrl', error)
+    errorHandlerLimit(name, 15, error)
+    errorHandlerLimit(youtubeUrl, 100, error)
+    if (error.length > 0 || !exp.test(youtubeUrl)) {
+        const errorMessage: APIErrorResult = {
+            errorsMessages: error
         }
-        const id: number = +req.params.id;
-        const blogger: BloggerViewModel | undefined = bloggers.find(b => b.id === id)
-        if (blogger) {
-            blogger.name = name,
-            blogger.youtubeUrl = youtubeUrl
-            res.status(204).send(blogger)
-        }
-        res.status(404).send('NotFound')
+        res.status(400).send(errorMessage)
     }
-    else{
-        const errorExist: Array<FieldError> = []
-        errorHandlerExist(name, 'name', errorExist)
-        errorHandlerExist(youtubeUrl, 'youtubeUrl', errorExist)
-        res.status(400).send(errorExist)
+    const id: number = +req.params.id;
+    const blogger: BloggerViewModel | undefined = bloggers.find(b => b.id === id)
+    if (blogger) {
+        blogger.name = name, blogger.youtubeUrl = youtubeUrl
+        res.status(204).send(blogger)
     }
-
+    res.status(404).send('NotFound')
 })
 
 //posts
@@ -171,98 +157,83 @@ app.delete('/posts/:id',(req: Request, res: Response)=>{
 })
 app.post('/posts', (req: Request, res: Response) => {
     const {title, shortDescription, content, bloggerId }:PostInputModel  = req.body
-    if(title && shortDescription && content && bloggerId) {
-        const error: Array<FieldError> = []
-        errorHandlerLimit(title, 30, error)
-        errorHandlerLimit(shortDescription, 100, error)
-        errorHandlerLimit(content, 1000, error)
-        if(error.length > 0){
-            const errorMessage: APIErrorResult = {
-                errorsMessages: error
-            }
-            res.status(400).send(errorMessage)
+    const error: Array<FieldError> = []
+    errorHandlerExist(title, 'title', error)
+    errorHandlerExist(shortDescription, 'shortDescription', error)
+    errorHandlerExist(content, 'content', error)
+    errorHandlerExist(`${bloggerId}`, 'bloggerId', error)
+    errorHandlerLimit(title, 30, error)
+    errorHandlerLimit(shortDescription, 100, error)
+    errorHandlerLimit(content, 1000, error)
+    if(error.length > 0){
+        const errorMessage: APIErrorResult = {
+            errorsMessages: error
         }
-        const blogger: BloggerViewModel | undefined = bloggers.find(b => b.id === +bloggerId)
-        let bloggerName = ''
-        if(blogger) bloggerName = blogger.name
-        else{
-            const errorMessage: APIErrorResult = {
-                errorsMessages: [{
-                    message: "Field title not found",
-                    field: "title"
-                }]
-            }
-            res.status(400).send(errorMessage)
-        }
-        const newPost: PostViewModel = {
-            id: +(new Date()),
-            title,
-            shortDescription,
-            content,
-            bloggerId: +bloggerId,
-            bloggerName: bloggerName
-        }
-        posts.push(newPost)
-        res.status(201).send(newPost)
+        res.status(400).send(errorMessage)
     }
+    const blogger: BloggerViewModel | undefined = bloggers.find(b => b.id === +bloggerId)
+    let bloggerName = ''
+    if(blogger) bloggerName = blogger.name
     else{
-        const errorExist: Array<FieldError> = []
-        errorHandlerExist(title, 'title', errorExist)
-        errorHandlerExist(shortDescription, 'shortDescription', errorExist)
-        errorHandlerExist(content, 'content', errorExist)
-        errorHandlerExist(`${bloggerId}`, 'bloggerId', errorExist)
-        res.status(400).send(errorExist)
+        const errorMessage: APIErrorResult = {
+            errorsMessages: [{
+                message: "Field title not found",
+                field: "title"
+            }]
+        }
+        res.status(400).send(errorMessage)
     }
+    const newPost: PostViewModel = {
+        id: +(new Date()),
+        title,
+        shortDescription,
+        content,
+        bloggerId: +bloggerId,
+        bloggerName: bloggerName
+    }
+    posts.push(newPost)
+    res.status(201).send(newPost)
 })
 
 app.put('/posts/:id',(req: Request, res: Response)=>{
     const {title, shortDescription, content, bloggerId }:PostInputModel  = req.body
-    if(title && shortDescription && content && bloggerId) {
-        const error: Array<FieldError> = []
-        if(title && shortDescription && content && bloggerId) {
-            errorHandlerLimit(title, 30, error)
-            errorHandlerLimit(shortDescription, 100, error)
-            errorHandlerLimit(content,1000, error)
-            if (error.length > 0) {
-                const errorMessage: APIErrorResult = {
-                    errorsMessages: error
-                }
-                res.status(400).send(errorMessage)
-            }
+    const error: Array<FieldError> = []
+    errorHandlerExist(title, 'title', error)
+    errorHandlerExist(shortDescription, 'shortDescription', error)
+    errorHandlerExist(content, 'content', error)
+    errorHandlerExist(`${bloggerId}`, 'bloggerId', error)
+    errorHandlerLimit(title, 30, error)
+    errorHandlerLimit(shortDescription, 100, error)
+    errorHandlerLimit(content, 1000, error)
+    if(error.length > 0){
+        const errorMessage: APIErrorResult = {
+            errorsMessages: error
         }
-        const blogger: BloggerViewModel | undefined = bloggers.find(b => b.id === +bloggerId)
-        let bloggerName = ''
-        if(blogger) bloggerName = blogger.name
-        else{
-            const errorMessage: APIErrorResult = {
-                errorsMessages: [{
-                    message: "Field title not found",
-                    field: "title"
-                }]
-            }
-            res.status(400).send(errorMessage)
-        }
-        const id: number = +req.params.id;
-        const post: PostViewModel | undefined = posts.find(p => p.id === id)
-        if (post) {
-            post.title = title;
-            post.shortDescription = shortDescription;
-            post.content = content;
-            post.bloggerId = bloggerId;
-            post.bloggerName = bloggerName;
-            res.status(204).send(post)
-        }
-        res.status(404).send('NotFound')
+        res.status(400).send(errorMessage)
     }
+    const blogger: BloggerViewModel | undefined = bloggers.find(b => b.id === +bloggerId)
+    let bloggerName = ''
+    if(blogger) bloggerName = blogger.name
     else{
-        const errorExist: Array<FieldError> = []
-        errorHandlerExist(title, 'title', errorExist)
-        errorHandlerExist(shortDescription, 'shortDescription', errorExist)
-        errorHandlerExist(content, 'content', errorExist)
-        errorHandlerExist(`${bloggerId}`, 'bloggerId', errorExist)
-        res.status(400).send(errorExist)
+        const errorMessage: APIErrorResult = {
+            errorsMessages: [{
+                message: "Field title not found",
+                field: "title"
+            }]
+        }
+        res.status(400).send(errorMessage)
     }
-
+    const id: number = +req.params.id;
+    const post: PostViewModel | undefined = posts.find(p => p.id === id)
+    if (post) {
+        post.title = title;
+        post.shortDescription = shortDescription;
+        post.content = content;
+        post.bloggerId = bloggerId;
+        post.bloggerName = bloggerName;
+        res.status(204).send(post)
+    }
+    res.status(404).send('NotFound')
 })
 
 app.listen(port, ()=>{
