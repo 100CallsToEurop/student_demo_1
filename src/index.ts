@@ -44,11 +44,11 @@ const posts: Array<PostViewModel> = [
     {id: 4, title: 'About JS - 04', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 4, bloggerName: 'it-incubator.eu'},
     {id: 5, title: 'About JS - 05', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 5, bloggerName: 'it-incubator.eu'},
 ]
-function errorExp(value: string, arrError: Array<FieldError>){
+function errorExp(value: string, valueFact: string, arrError: Array<FieldError>){
     const exp = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
     if(!exp.test(value)) return arrError.push({
-        message: `Field ${value} error`,
-        field: `${value}`
+        message: `Field ${valueFact} error`,
+        field: `${valueFact}`
     })
     return arrError
 }
@@ -91,7 +91,7 @@ app.post('/bloggers', (req: Request, res: Response) => {
     const error: Array<FieldError> = []
     errorHandler(name, 'name',15, error)
     errorHandler(youtubeUrl, 'youtubeUrl',100, error)
-    errorExp(youtubeUrl, error)
+    errorExp(youtubeUrl, 'youtubeUrl', error)
     if (error.length > 0) {
         const errorMessage: APIErrorResult = {
             errorsMessages: error
@@ -113,7 +113,7 @@ app.put('/bloggers/:id',(req: Request, res: Response)=>{
     const error: Array<FieldError> = []
     errorHandler(name, 'name',15, error)
     errorHandler(youtubeUrl, 'youtubeUrl',100, error)
-    errorExp(youtubeUrl, error)
+    errorExp(youtubeUrl, 'youtubeUrl', error)
     if (error.length > 0) {
         const errorMessage: APIErrorResult = {
             errorsMessages: error
