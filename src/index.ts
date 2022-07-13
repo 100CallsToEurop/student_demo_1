@@ -74,8 +74,8 @@ app.get('/bloggers', (req: Request, res: Response)=>{
 app.get('/bloggers/:id', (req: Request, res: Response) => {
     const id: number = +req.params.id;
     const blogger: BloggerViewModel | undefined = bloggers.find(b => b.id === id)
-    if(!blogger) res.status(404).send('Not found')
-    res.status(200).send(blogger)
+    if(blogger) res.status(200).send(blogger)
+    res.status(404).send('Not found')
 })
 app.delete('/bloggers/:id',(req: Request, res: Response)=>{
     const id: number = +req.params.id;
@@ -143,6 +143,7 @@ app.get('/posts', (req: Request, res: Response)=>{
 
 //400 Bad Request - Доделать
 app.get('/posts/:id', (req: Request, res: Response) => {
+    if(isNaN(+req.params.id)) res.status(400).send('Bad request')
     const id: number = +req.params.id;
     const post: PostViewModel | undefined = posts.find(p => p.id === id)
     if(!post) res.status(404).send('Not found')
