@@ -25,6 +25,11 @@ const contentValidation = body('content')
     .isLength({max: 1000})
     .withMessage('Max 1000 symbols')
 
+const bloggerIdValidation = body('bloggerId')
+    .isNumeric()
+    .exists()
+    .notEmpty()
+    .withMessage('bloggerId must be numeric')
 
 export const postsRouter = Router({})
 
