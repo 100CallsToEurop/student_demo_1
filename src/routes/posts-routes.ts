@@ -53,6 +53,7 @@ postsRouter.post('/',
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
+    bloggerIdValidation,
     inputValidatorMiddleware,
     (req: Request, res: Response) => {
     const newPosts = postsRepository.createPost(req.body)
@@ -67,6 +68,7 @@ postsRouter.put('/:id',
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
+    bloggerIdValidation,
     inputValidatorMiddleware,
     (req: Request, res: Response)=>{
     const id = +req.params.id
