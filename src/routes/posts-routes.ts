@@ -3,6 +3,7 @@ import {Request, Response, Router} from "express";
 import {postsRepository} from "../repositories/posts-repository";
 import {body} from "express-validator";
 import {inputValidatorMiddleware} from "../middleware/input-validator-middleware";
+import {authMiddleware} from "../middleware/auth-middleware";
 
 const titleValidation = body('title')
     .trim()
@@ -43,13 +44,14 @@ postsRouter.get('/:id', (req: Request, res: Response) => {
     if(!post) res.status(404).send('Not found')
     res.status(200).send(post)
 })
-postsRouter.delete('/:id',(req: Request, res: Response)=>{
+postsRouter.delete('/:id', authMiddleware,(req: Request, res: Response)=>{
     const id = +req.params.id
     if (postsRepository.deletePostById(id))
         res.status(204).send('No Content')
     res.status(404).send('Not found')
 })
 postsRouter.post('/',
+    authMiddleware,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
@@ -66,6 +68,7 @@ postsRouter.post('/',
 })
 
 postsRouter.put('/:id',
+    authMiddleware,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,

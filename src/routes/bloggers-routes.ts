@@ -2,6 +2,7 @@ import {Request, Response, Router} from "express";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 import {body} from "express-validator";
 import {inputValidatorMiddleware} from "../middleware/input-validator-middleware";
+import {authMiddleware} from "../middleware/auth-middleware";
 
 export const bloggersRouter = Router({})
 
@@ -28,13 +29,14 @@ bloggersRouter.get('/:id', (req: Request, res: Response) => {
     if(blogger) res.status(200).json(blogger)
     res.status(404).send('Not found')
 })
-bloggersRouter.delete('/:id',(req: Request, res: Response)=>{
+bloggersRouter.delete('/:id', authMiddleware, (req: Request, res: Response)=>{
     const id = +req.params.id
     if (bloggersRepository.deleteBloggerById(id))
         res.status(204).send('No Content')
     res.status(404).send('Not found')
 })
 bloggersRouter.post('/',
+    authMiddleware,
     nameValidation,
     titleValidation,
     inputValidatorMiddleware,
@@ -46,6 +48,7 @@ bloggersRouter.post('/',
     res.status(400).send('Bad request')
 })
 bloggersRouter.put('/:id',
+    authMiddleware,
     nameValidation,
     titleValidation,
     inputValidatorMiddleware,
