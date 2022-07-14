@@ -13,7 +13,7 @@ const app = express()
 
 app.use(cors())
 app.use(parserMiddleware)
-app.use(authMiddleware)
+//app.use(authMiddleware)
 
 app.use('/bloggers', bloggersRouter)
 app.use('/posts', postsRouter)
