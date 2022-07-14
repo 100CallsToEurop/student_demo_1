@@ -5,18 +5,21 @@ import {body} from "express-validator";
 import {inputValidatorMiddleware} from "../middleware/input-validator-middleware";
 
 const titleValidation = body('title')
+    .trim()
     .exists()
     .notEmpty()
     .isLength({max: 30})
     .withMessage('Max 30 symbols')
 
 const shortDescriptionValidation = body('shortDescription')
+    .trim()
     .exists()
     .notEmpty()
     .isLength({max: 100})
     .withMessage('Max 100 symbols')
 
 const contentValidation = body('content')
+    .trim()
     .exists()
     .notEmpty()
     .isLength({max: 1000})

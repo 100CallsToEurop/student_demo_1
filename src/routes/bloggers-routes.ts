@@ -6,12 +6,14 @@ import {inputValidatorMiddleware} from "../middleware/input-validator-middleware
 export const bloggersRouter = Router({})
 
 const nameValidation = body('name')
+    .trim()
     .exists()
     .notEmpty()
     .isLength({max: 15})
     .withMessage('Max 15 symbols')
 
 const titleValidation = body('youtubeUrl')
+    .trim()
     .exists()
     .notEmpty()
     .isLength({max: 100})
