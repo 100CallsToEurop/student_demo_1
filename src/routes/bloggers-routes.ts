@@ -7,11 +7,13 @@ export const bloggersRouter = Router({})
 
 const nameValidation = body('name')
     .exists()
+    .notEmpty()
     .isLength({max: 15})
     .withMessage('Max 15 symbols')
 
 const titleValidation = body('youtubeUrl')
     .exists()
+    .notEmpty()
     .isLength({max: 100})
     .withMessage('Max 100 symbols')
     .matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/)

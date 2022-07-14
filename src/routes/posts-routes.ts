@@ -6,16 +6,19 @@ import {inputValidatorMiddleware} from "../middleware/input-validator-middleware
 
 const titleValidation = body('title')
     .exists()
+    .notEmpty()
     .isLength({max: 30})
     .withMessage('Max 30 symbols')
 
 const shortDescriptionValidation = body('shortDescription')
     .exists()
+    .notEmpty()
     .isLength({max: 100})
     .withMessage('Max 100 symbols')
 
 const contentValidation = body('content')
     .exists()
+    .notEmpty()
     .isLength({max: 1000})
     .withMessage('Max 1000 symbols')
 
