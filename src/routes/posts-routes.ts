@@ -57,6 +57,7 @@ postsRouter.post('/',
     inputValidatorMiddleware,
     (req: Request, res: Response) => {
     const newPosts = postsRepository.createPost(req.body)
+        if(newPosts === null) res.status(400).send('Bad Request')
     if(newPosts) {
         res.status(201).send(newPosts)
     }
@@ -73,6 +74,7 @@ postsRouter.put('/:id',
     (req: Request, res: Response)=>{
     const id = +req.params.id
     const isUpdate = postsRepository.updatePostById(id, req.body)
+        if(isUpdate === null) res.status(400).send('Bad Request')
     if (isUpdate) {
         const blogger = postsRepository.getPostById(id)
         res.status(204).send(blogger)

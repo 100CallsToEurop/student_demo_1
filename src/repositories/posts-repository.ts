@@ -28,12 +28,14 @@ export const postsRepository = {
     },
     updatePostById(id: number, updatePost: PostInputModel) {
         const {title, shortDescription, content, bloggerId }  = updatePost
+        const blogger = bloggers.find(b => b.id === +bloggerId)
+        if(!blogger) return null
         const post = posts.find(p => p.id === id)
         if (post) {
             post.title = title
             post.shortDescription = shortDescription
             post.content = content
-            post.bloggerId = bloggerId
+            post.bloggerId = +bloggerId
             return true
         }
         return false
@@ -43,6 +45,7 @@ export const postsRepository = {
         let bloggerName = ''
         const blogger = bloggers.find(b => b.id === +bloggerId)
         if(blogger) bloggerName = blogger.name
+        else return null
         const newPost: PostViewModel = {
             id: +(new Date()),
             title,
