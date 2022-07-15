@@ -1,52 +1,32 @@
 //posts
 import {Request, Response, Router} from "express";
-import {postsRepository} from "../repositories/posts-repository";
-import {body} from "express-validator";
 import {inputValidatorMiddleware} from "../middleware/input-validator-middleware";
 import {authMiddleware} from "../middleware/auth-middleware";
-
-const titleValidation = body('title')
-    .trim()
-    .exists()
-    .notEmpty()
-    .isLength({max: 30})
-    .withMessage('Max 30 symbols')
-
-const shortDescriptionValidation = body('shortDescription')
-    .trim()
-    .exists()
-    .notEmpty()
-    .isLength({max: 100})
-    .withMessage('Max 100 symbols')
-
-const contentValidation = body('content')
-    .trim()
-    .exists()
-    .notEmpty()
-    .isLength({max: 1000})
-    .withMessage('Max 1000 symbols')
-
-const bloggerIdValidation = body('bloggerId')
-    .isNumeric()
-    .exists()
-    .notEmpty()
-    .withMessage('bloggerId must be numeric')
+import {postsService} from "../domian/posts.services";
+import {
+    bloggerIdValidation,
+    contentValidation,
+    shortDescriptionValidation,
+    titleValidation
+} from "../middleware/post-middleware";
+import {PostQuery} from "../types";
 
 export const postsRouter = Router({})
 
-postsRouter.get('/', (req: Request, res: Response)=>{
-    const posts = postsRepository.getPosts()
+postsRouter.get('/', async (req: Request, res: Response) => {
+    const {page, pageSize}: PostQuery = req.query
+    const posts = await postsService.getPosts({page, pageSize})
     res.status(200).send(posts)
 })
-postsRouter.get('/:id', (req: Request, res: Response) => {
+postsRouter.get('/:id', async (req: Request, res: Response) => {
     const id: number = +req.params.id;
-    const post = postsRepository.getPostById(id)
+    const post = await postsService.getPostById(id)
     if(!post) res.status(404).send('Not found')
     res.status(200).send(post)
 })
-postsRouter.delete('/:id', authMiddleware,(req: Request, res: Response)=>{
+postsRouter.delete('/:id', authMiddleware, async (req: Request, res: Response)=>{
     const id = +req.params.id
-    if (postsRepository.deletePostById(id))
+    if (await postsService.deletePostById(id))
         res.status(204).send('No Content')
     res.status(404).send('Not found')
 })
@@ -57,8 +37,8 @@ postsRouter.post('/',
     contentValidation,
     bloggerIdValidation,
     inputValidatorMiddleware,
-    (req: Request, res: Response) => {
-    const newPosts = postsRepository.createPost(req.body)
+    async (req: Request, res: Response) => {
+    const newPosts = await postsService.createPost(req.body)
         if(newPosts === null) res.status(400).send({ errorsMessages: [{ message: "Not found", field: "bloggerId" }] })
     if(newPosts) {
         res.status(201).send(newPosts)
@@ -74,12 +54,12 @@ postsRouter.put('/:id',
     contentValidation,
     bloggerIdValidation,
     inputValidatorMiddleware,
-    (req: Request, res: Response)=>{
+    async (req: Request, res: Response)=>{
     const id = +req.params.id
-    const isUpdate = postsRepository.updatePostById(id, req.body)
+    const isUpdate = await postsService.updatePostById(id, req.body)
         if(isUpdate === null) res.status(400).send({ errorsMessages: [{ message: "Not found", field: "bloggerId" }] })
     if (isUpdate) {
-        const blogger = postsRepository.getPostById(id)
+        const blogger = await postsService.getPostById(id)
         res.status(204).send(blogger)
     }
     res.status(404).send('NotFound')

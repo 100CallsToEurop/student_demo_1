@@ -1,3 +1,25 @@
+import {MongoClient} from "mongodb";
+import {BloggerViewModel, PostViewModel} from "../types";
+
+const mongoUri = process.env.URI || "mongodb://localhost:27017"
+
+export const client = new MongoClient(mongoUri)
+const db = client.db("backend")
+export const bloggersCollection = db.collection<BloggerViewModel>("bloggers")
+export const postsCollection = db.collection<PostViewModel>("posts")
+
+export async function runDb(){
+    try{
+        await client.connect()
+        await client.db("backend").command({ping: 1})
+        console.log("Connected successfully to mongo server")
+    }catch(err){
+        console.log("Can't connect to db")
+        console.log(err)
+        await client.close()
+    }
+}
+
 export const bloggers = [
     {id: 1, name: 'About JS - 01', youtubeUrl: 'https://yandex.ru'},
     {id: 2, name: 'About JS - 02', youtubeUrl: 'https://yandex.ru'},

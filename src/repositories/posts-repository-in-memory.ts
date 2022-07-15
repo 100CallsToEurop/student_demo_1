@@ -1,14 +1,5 @@
 import {bloggers, posts} from "./db";
-
-type PostInputModel = Omit<PostViewModel, 'id' | 'bloggerName'>
-type PostViewModel  = {
-    id: number,
-    title: string,
-    shortDescription: string,
-    content: string,
-    bloggerId: number,
-    bloggerName: string
-}
+import {PostInputModel, PostViewModel} from "../types";
 
 export const postsRepository = {
     getPosts() {

@@ -1,37 +1,28 @@
 import {Request, Response, Router} from "express";
-import {bloggersRepository} from "../repositories/bloggers-repository";
-import {body} from "express-validator";
+import {bloggersService} from "../domian/bloggers.service";
 import {inputValidatorMiddleware} from "../middleware/input-validator-middleware";
 import {authMiddleware} from "../middleware/auth-middleware";
+import {nameValidation, titleValidation} from "../middleware/blogger-middleware";
+import {contentValidation, shortDescriptionValidation} from "../middleware/post-middleware";
+import {postsService} from "../domian/posts.services";
+import {BloggerPostInputModel, BloggerQuery, Pagination, PostQuery} from "../types";
 
 export const bloggersRouter = Router({})
 
-const nameValidation = body('name')
-    .trim()
-    .exists()
-    .notEmpty()
-    .isLength({max: 15})
-    .withMessage('Max 15 symbols')
-
-const titleValidation = body('youtubeUrl')
-    .exists()
-    .isLength({max: 100})
-    .withMessage('Max 100 symbols')
-    .matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/)
-
-bloggersRouter.get('/', (req: Request, res: Response)=>{
-    const bloggers = bloggersRepository.getBloggers()
+bloggersRouter.get('/', async (req: Request, res: Response) => {
+    const {name, page, pageSize}: BloggerQuery = req.query
+    const bloggers = await bloggersService.getBloggers({ name, page, pageSize})
     res.status(200).json(bloggers)
 })
-bloggersRouter.get('/:id', (req: Request, res: Response) => {
+bloggersRouter.get('/:id', async (req: Request, res: Response) => {
     const id = +req.params.id
-    const blogger = bloggersRepository.getBloggerById(id)
-    if(blogger) res.status(200).json(blogger)
+    const blogger = await bloggersService.getBloggerById(id)
+    if (blogger) res.status(200).json(blogger)
     res.status(404).send('Not found')
 })
-bloggersRouter.delete('/:id', authMiddleware, (req: Request, res: Response)=>{
+bloggersRouter.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
     const id = +req.params.id
-    if (bloggersRepository.deleteBloggerById(id))
+    if (await bloggersService.deleteBloggerById(id))
         res.status(204).send('No Content')
     res.status(404).send('Not found')
 })
@@ -40,8 +31,8 @@ bloggersRouter.post('/',
     nameValidation,
     titleValidation,
     inputValidatorMiddleware,
-    (req: Request, res: Response) => {
-    const newBloger = bloggersRepository.createBlogger(req.body)
+    async (req: Request, res: Response) => {
+    const newBloger = await bloggersService.createBlogger(req.body)
     if(newBloger) {
         res.status(201).json(newBloger)
     }
@@ -52,12 +43,37 @@ bloggersRouter.put('/:id',
     nameValidation,
     titleValidation,
     inputValidatorMiddleware,
-    (req: Request, res: Response)=>{
+    async (req: Request, res: Response)=>{
     const id = +req.params.id
-    const isUpdate = bloggersRepository.updateBloggerById(id, req.body)
+    const isUpdate = await bloggersService.updateBloggerById(id, req.body)
     if (isUpdate) {
-        const blogger = bloggersRepository.getBloggerById(id)
+        const blogger = await bloggersService.getBloggerById(id)
         res.status(204).json(blogger)
     }
     res.status(404).send('NotFound')
 })
+
+//for Posts
+bloggersRouter.get('/:id/posts', async (req: Request, res: Response) => {
+    const id = req.params.id
+    const {page, pageSize}: PostQuery = req.query
+    const bloggerPosts = await postsService.getPosts({id, page, pageSize})
+    if (bloggerPosts) res.status(200).json(bloggerPosts)
+    res.status(404).send('Not found')
+})
+bloggersRouter.post('/:id/posts',
+    authMiddleware,
+    titleValidation,
+    shortDescriptionValidation,
+    contentValidation,
+    inputValidatorMiddleware,
+    async (req: Request, res: Response) => {
+        const bloggerId: number = +req.params.id
+        const {title, shortDescription, content}: BloggerPostInputModel  = req.body
+        const newBlogPost = await postsService.createPost({title, shortDescription, content, bloggerId})
+        if(newBlogPost === null) res.status(400).send({ errorsMessages: [{ message: "Not found", field: "bloggerId" }] })
+        if(newBlogPost) {
+            res.status(201).send(newBlogPost)
+        }
+        res.status(400).send('Bad request')
+    })

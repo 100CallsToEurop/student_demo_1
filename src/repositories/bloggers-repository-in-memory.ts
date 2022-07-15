@@ -1,20 +1,14 @@
 import {bloggers, posts} from "./db";
-
-type BloggerInputModel = Omit<BloggerViewModel, 'id'>
-type BloggerViewModel = {
-    id: number,
-    name: string,
-    youtubeUrl: string
-}
+import {BloggerInputModel, BloggerViewModel} from "../types";
 
 export const bloggersRepository = {
-    getBloggers() {
+    async getBloggers(): Promise<BloggerViewModel[]> {
         return bloggers
     },
-    getBloggerById(id: number) {
+    async getBloggerById(id: number): Promise<BloggerViewModel | undefined> {
         return bloggers.find(b => b.id === id)
     },
-    deleteBloggerById(id: number) {
+    async deleteBloggerById(id: number): Promise<boolean> {
         for(let i = 0; i < bloggers.length; i++){
             if(bloggers[i].id === id) {
                 for (let j =0; j < posts.length; j++){
@@ -28,16 +22,16 @@ export const bloggersRepository = {
         }
         return false
     },
-    updateBloggerById(id: number, updateParam: BloggerInputModel) {
+    async updateBloggerById(id: number, updateParam: BloggerInputModel): Promise<boolean> {
         const {name, youtubeUrl} = updateParam
-        const blogger = bloggers.find(b => b.id === id)
+        const blogger = await bloggers.find(b => b.id === id)
         if (blogger) {
             blogger.name = name, blogger.youtubeUrl = youtubeUrl
             return true
         }
         return false
     },
-    createBlogger(createParam: BloggerInputModel){
+    async createBlogger(createParam: BloggerInputModel): Promise<BloggerViewModel>{
         const {name, youtubeUrl} = createParam
         const newBlogger: BloggerViewModel = {
             id: +(new Date()),
