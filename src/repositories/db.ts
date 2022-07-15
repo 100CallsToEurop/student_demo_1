@@ -1,8 +1,8 @@
 import {MongoClient} from "mongodb";
 import {BloggerViewModel, PostViewModel} from "../types"
 
-/*"mongodb+srv://user:sven171995@cluster0.tuuab.mongodb.net/?retryWrites=true&w=majority"*/
-const uri = `mongodb+srv://user:bloodygun8v5@cluster0.tuuab.mongodb.net/?retryWrites=true&w=majority`;
+
+const uri = `mongodb+srv://user:testDatabase@cluster0.tuuab.mongodb.net/?retryWrites=true&w=majority`;
 
 
 
