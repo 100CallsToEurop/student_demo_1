@@ -1,7 +1,7 @@
 import {MongoClient} from "mongodb";
 import {BloggerViewModel, PostViewModel} from "../types";
-
-const mongoUri = "mongodb+srv://user:sven171995@cluster0.tuuab.mongodb.net/?retryWrites=true&w=majority"
+/*"mongodb+srv://user:sven171995@cluster0.tuuab.mongodb.net/?retryWrites=true&w=majority"*/
+const mongoUri = "mongodb://0.0.0.0:27017"
 
 export const client = new MongoClient(mongoUri)
 const db = client.db("backend")
