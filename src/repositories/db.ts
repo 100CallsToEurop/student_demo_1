@@ -1,11 +1,11 @@
-import {MongoClient} from "mongodb";
+import {MongoClient, ServerApiVersion} from "mongodb";
 import {BloggerViewModel, PostViewModel} from "../types";
 /*"mongodb+srv://user:sven171995@cluster0.tuuab.mongodb.net/?retryWrites=true&w=majority"*/
-const mongoUri = "mongodb+srv://user:sven171995@cluster0.tuuab.mongodb.net/?retryWrites=true&w=majority"
+const uri = "mongodb+srv://user:sven171995.tuuab.mongodb.net/?retryWrites=true&w=majority";
 
 
 
-export const client = new MongoClient(mongoUri)
+export const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 })
 const db = client.db("backend")
 export const bloggersCollection = db.collection<BloggerViewModel>("bloggers")
 export const postsCollection = db.collection<PostViewModel>("posts")
@@ -21,6 +21,9 @@ export async function runDb(){
         await client.close()
     }
 }
+
+
+
 
 export const bloggers = [
     {id: 1, name: 'About JS - 01', youtubeUrl: 'https://aaa@yandex.ru'},
