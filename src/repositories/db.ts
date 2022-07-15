@@ -1,7 +1,7 @@
 import {MongoClient, ServerApiVersion} from "mongodb";
 import {BloggerViewModel, PostViewModel} from "../types";
 /*"mongodb+srv://user:sven171995@cluster0.tuuab.mongodb.net/?retryWrites=true&w=majority"*/
-const uri = "mongodb+srv://user:sven171995.tuuab.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://user:sven171995@cluster0.tuuab.mongodb.net/?retryWrites=true&w=majority";
 
 
 
