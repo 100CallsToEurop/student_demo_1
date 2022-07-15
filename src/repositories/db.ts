@@ -1,7 +1,7 @@
 import {MongoClient} from "mongodb";
 import {BloggerViewModel, PostViewModel} from "../types";
 
-const mongoUri = process.env.URI || "mongodb://localhost:27017"
+const mongoUri = process.env.URI || "mongodb://0.0.0.0:27017"
 
 export const client = new MongoClient(mongoUri)
 const db = client.db("backend")
