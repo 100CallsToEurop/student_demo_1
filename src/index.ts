@@ -18,8 +18,8 @@ app.use(cors())
 app.use(jsonMiddleware)
 
 
-app.use('/api/bloggers', bloggersRouter)
-app.use('api/posts', postsRouter)
+app.use('/bloggers', bloggersRouter)
+app.use('/posts', postsRouter)
 
 const startApp = async() =>{
     await runDb()
