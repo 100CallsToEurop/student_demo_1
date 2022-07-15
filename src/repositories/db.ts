@@ -21,11 +21,11 @@ export async function runDb(){
 }
 
 export const bloggers = [
-    {id: 1, name: 'About JS - 01', youtubeUrl: 'https://yandex.ru'},
-    {id: 2, name: 'About JS - 02', youtubeUrl: 'https://yandex.ru'},
-    {id: 3, name: 'About JS - 03', youtubeUrl: 'https://yandex.ru'},
-    {id: 4, name: 'About JS - 04', youtubeUrl: 'https://yandex.ru'},
-    {id: 5, name: 'About JS - 05', youtubeUrl: 'https://yandex.ru'}
+    {id: 1, name: 'About JS - 01', youtubeUrl: 'https://aaa@yandex.ru'},
+    {id: 2, name: 'About JS - 02', youtubeUrl: 'https://aaa@yandex.ru'},
+    {id: 3, name: 'About JS - 03', youtubeUrl: 'https://aaa@yandex.ru'},
+    {id: 4, name: 'About JS - 04', youtubeUrl: 'https://aaa@yandex.ru'},
+    {id: 5, name: 'About JS - 05', youtubeUrl: 'https://aaa@yandex.ru'}
 ]
 
 export const posts = [
