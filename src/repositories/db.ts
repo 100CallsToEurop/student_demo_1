@@ -1,7 +1,11 @@
 import {MongoClient} from "mongodb";
-import {BloggerViewModel, PostViewModel} from "../types";
+import {BloggerViewModel, PostViewModel} from "../types"
+
+const username = encodeURIComponent("piaterik123123@mail.ru");
+const password = encodeURIComponent("sven171995");
+
 /*"mongodb+srv://user:sven171995@cluster0.tuuab.mongodb.net/?retryWrites=true&w=majority"*/
-const uri = "mongodb+srv://piaterik123123%40mail.ru:sven171995@cluster0.tuuab.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${username}:${password}@cluster0.tuuab.mongodb.net/?retryWrites=true&w=majority`;
 
 
 
