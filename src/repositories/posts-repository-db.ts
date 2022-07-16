@@ -9,7 +9,7 @@ export const postsRepository = {
         const skip: number = (pageNumber-1) * pageSize
         let filter: any = {}
         if(queryParams?.id){
-            filter['bloggerId'] = {$regex: queryParams.id}
+            filter['bloggerId'] = {$regex: +queryParams.id}
         }
 
         const result: PaginationPosts= {

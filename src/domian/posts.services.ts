@@ -5,10 +5,12 @@ import {bloggersService} from "./bloggers.service";
 export const postsService = {
     async getPosts(queryParams?: PostQuery): Promise<PaginationPosts | null> {
         if(queryParams?.id){
+            console.log(1)
             const bloggers = await bloggersService.getBloggerById(+queryParams?.id)
-            if(!bloggers) return null
+            if(bloggers) return await postsRepository.getPosts(queryParams)
+            return null
         }
-        return await postsRepository.getPosts(queryParams)
+        return null
     },
     async getPostById(id: number) {
         return await postsRepository.getPostById(id)
