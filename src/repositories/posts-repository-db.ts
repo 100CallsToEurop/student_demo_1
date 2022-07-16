@@ -17,13 +17,13 @@ export const postsRepository = {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: await postsCollection.find().count(),
-            items: await postsCollection.find(filter).skip(skip).limit(pageSize).toArray()
+            items: await postsCollection.find({...filter, projection: { _id: 0}}).skip(skip).limit(pageSize).toArray()
         }
 
         return result
     },
     async getPostById(id: number) {
-        let post = await postsCollection.findOne({id})
+        let post = await postsCollection.findOne({id}, {projection: { _id: 0}})
         if(post) return post
         return null
     },

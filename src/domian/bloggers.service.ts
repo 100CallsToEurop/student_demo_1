@@ -6,9 +6,11 @@ export const bloggersService= {
     async getBloggers(queryParams?: BloggerQuery): Promise<PaginationBloggers> {
         return bloggersRepository.getBloggers(queryParams)
 
+
     },
     async getBloggerById(id: number): Promise<BloggerViewModel | null> {
-        return await bloggersRepository.getBloggerById(id)
+        const blogger = await bloggersRepository.getBloggerById(id)
+        return blogger
     },
     async deleteBloggerById(id: number): Promise<boolean> {
         return await bloggersRepository.deleteBloggerById(id)

@@ -19,13 +19,13 @@ export const bloggersRepository = {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: await bloggersCollection.find().count(),
-            items: await bloggersCollection.find(filter).skip(skip).limit(pageSize).toArray()
+            items: await bloggersCollection.find({...filter, projection: { _id: 0}}).skip(skip).limit(pageSize).toArray()
         }
 
         return result
     },
     async getBloggerById(id: number): Promise<BloggerViewModel | null> {
-       let bloger = await bloggersCollection.findOne({id})
+       const bloger = await bloggersCollection.findOne({id},{ projection: { _id: 0}})
        return bloger
     },
     async deleteBloggerById(id: number): Promise<boolean> {
