@@ -3,7 +3,7 @@ import {bloggersService} from "../domian/bloggers.service";
 import {inputValidatorMiddleware} from "../middleware/input-validator-middleware";
 import {authMiddleware} from "../middleware/auth-middleware";
 import {nameValidation, titleValidation} from "../middleware/blogger-middleware";
-import {contentValidation, shortDescriptionValidation} from "../middleware/post-middleware";
+import {contentValidation, shortDescriptionValidation, titleValidationPosts} from "../middleware/post-middleware";
 import {postsService} from "../domian/posts.services";
 import {BloggerPostInputModel, BloggerQuery, Pagination, PostQuery} from "../types";
 
@@ -72,7 +72,7 @@ bloggersRouter.get('/:id/posts', async (req: Request, res: Response) => {
 })
 bloggersRouter.post('/:id/posts',
     authMiddleware,
-    titleValidation,
+    titleValidationPosts,
     shortDescriptionValidation,
     contentValidation,
     inputValidatorMiddleware,

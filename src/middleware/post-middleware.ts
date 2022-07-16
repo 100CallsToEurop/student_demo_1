@@ -1,6 +1,6 @@
 import {body} from "express-validator";
 
-export const titleValidation = body('title')
+export const titleValidationPosts = body('title')
     .trim()
     .exists()
     .notEmpty()

@@ -7,7 +7,7 @@ import {
     bloggerIdValidation,
     contentValidation,
     shortDescriptionValidation,
-    titleValidation
+    titleValidationPosts
 } from "../middleware/post-middleware";
 import {PostQuery} from "../types";
 
@@ -38,7 +38,7 @@ postsRouter.delete('/:id', authMiddleware, async (req: Request, res: Response)=>
 })
 postsRouter.post('/',
     authMiddleware,
-    titleValidation,
+    titleValidationPosts,
     shortDescriptionValidation,
     contentValidation,
     bloggerIdValidation,
@@ -58,7 +58,7 @@ postsRouter.post('/',
 
 postsRouter.put('/:id',
     authMiddleware,
-    titleValidation,
+    titleValidationPosts,
     shortDescriptionValidation,
     contentValidation,
     bloggerIdValidation,
