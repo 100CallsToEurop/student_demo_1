@@ -17,7 +17,7 @@ const app = express()
 
 app.use(cors())
 app.use(parserMiddleware)
-//app.use(jsonMiddleware)
+app.use(jsonMiddleware)
 
 
 app.use('/bloggers', bloggersRouter)
