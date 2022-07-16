@@ -16,7 +16,7 @@ export const postsRouter = Router({})
 postsRouter.get('/', async (req: Request, res: Response) => {
     const {PageNumber, PageSize}: PostQuery = req.query
     const posts = await postsService.getPosts({PageNumber, PageSize})
-    res.status(200).send(posts)
+    res.status(200).json(posts)
 })
 postsRouter.get('/:id', async (req: Request, res: Response) => {
     const id: number = +req.params.id;

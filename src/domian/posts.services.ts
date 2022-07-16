@@ -4,13 +4,16 @@ import {bloggersService} from "./bloggers.service";
 
 export const postsService = {
     async getPosts(queryParams?: PostQuery): Promise<PaginationPosts | null> {
-        if(queryParams?.id){
+        if(queryParams?.id) {
             const bloggers = await bloggersService.getBloggerById(+queryParams?.id)
-            if(bloggers) return await postsRepository.getPosts(queryParams)
-            return null
+            if (!bloggers) return null
+            return await postsRepository.getPosts(queryParams)
         }
-        return null
+        else
+        return await postsRepository.getPosts(queryParams)
     },
+
+
     async getPostById(id: number) {
         return await postsRepository.getPostById(id)
     },

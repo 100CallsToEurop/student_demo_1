@@ -1,18 +1,22 @@
-import {bloggersCollection, postsCollection} from "./db";
-import {PaginationBloggers, PaginationPosts, PostInputModel, PostQuery, PostViewModel} from "../types";
-import {bloggersRepository} from "./bloggers-repository-db";
+import {postsCollection} from "./db";
+import { PaginationPosts, PostInputModel, PostQuery, PostViewModel} from "../types";
 
 export const postsRepository = {
     async getPosts(queryParams?: PostQuery): Promise<PaginationPosts> {
         const pageNumber = Number(queryParams?.PageNumber) || 1
         const pageSize = Number(queryParams?.PageSize) || 10
         const skip: number = (pageNumber-1) * pageSize
-        let count = await bloggersCollection.countDocuments()
+        let count = 0
 
         let filter: any = {}
+
         if(queryParams?.id){
             filter['bloggerId'] = {$regex: queryParams.id}
-            count = (await bloggersCollection.find(filter).toArray()).length
+            count = (await postsCollection.find(filter).toArray()).length
+        }
+
+        if(queryParams?.id === undefined){
+            count = await postsCollection.countDocuments()
         }
 
         const result: PaginationPosts= {

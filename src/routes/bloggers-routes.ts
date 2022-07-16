@@ -11,7 +11,6 @@ export const bloggersRouter = Router({})
 
 bloggersRouter.get('/', async (req: Request, res: Response) => {
     const {SearchNameTerm, PageNumber, PageSize}: BloggerQuery = req.query
-    console.log(PageNumber, PageSize)
     const bloggers = await bloggersService.getBloggers({ SearchNameTerm, PageNumber, PageSize})
     res.status(200).json(bloggers)
 })
