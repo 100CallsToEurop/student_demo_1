@@ -25,8 +25,10 @@ bloggersRouter.get('/:id', async (req: Request, res: Response) => {
 })
 bloggersRouter.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
     const id = +req.params.id
-    if (await bloggersService.deleteBloggerById(id))
+    if (await bloggersService.deleteBloggerById(id)) {
         res.status(204).send('No Content')
+        return
+    }
     res.status(404).send('Not found')
 })
 bloggersRouter.post('/',
