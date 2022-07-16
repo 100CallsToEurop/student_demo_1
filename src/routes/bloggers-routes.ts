@@ -64,8 +64,8 @@ bloggersRouter.put('/:id',
 //for Posts
 bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
     const id = req.params.bloggerId
-    const {page, pageSize}: PostQuery = req.query
-    const bloggerPosts = await postsService.getPosts({id, page, pageSize})
+    const {PageNumber, PageSize}: PostQuery = req.query
+    const bloggerPosts = await postsService.getPosts({id, PageNumber, PageSize})
     if (bloggerPosts) {
         res.status(200).json(bloggerPosts)
         return

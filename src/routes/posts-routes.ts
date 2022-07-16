@@ -14,8 +14,8 @@ import {PostQuery} from "../types";
 export const postsRouter = Router({})
 
 postsRouter.get('/', async (req: Request, res: Response) => {
-    const {page, pageSize}: PostQuery = req.query
-    const posts = await postsService.getPosts({page, pageSize})
+    const {PageNumber, PageSize}: PostQuery = req.query
+    const posts = await postsService.getPosts({PageNumber, PageSize})
     res.status(200).send(posts)
 })
 postsRouter.get('/:id', async (req: Request, res: Response) => {

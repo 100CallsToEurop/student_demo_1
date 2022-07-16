@@ -21,8 +21,8 @@ export type BloggerPostInputModel = Omit<PostInputModel, 'bloggerId'>
 
 export type PostQuery = {
     id?: string,
-    page?: string,
-    pageSize?: string
+    PageNumber?: string,
+    PageSize?: string
 }
 
 export type BloggerQuery = {
