@@ -10,14 +10,14 @@ import {postsRouter} from "./routes/posts-routes";
 import {runDb} from "./repositories/db";
 
 //Constant
-const jsonMiddleware = bodyParser.json()
+//const jsonMiddleware = bodyParser.json()
 const parserMiddleware = bodyParser({})
 const port = process.env.PORT || 5000
 const app = express()
 
 app.use(cors())
-//app.use(parserMiddleware)
-app.use(jsonMiddleware)
+app.use(parserMiddleware)
+//app.use(jsonMiddleware)
 
 
 app.use('/bloggers', bloggersRouter)
