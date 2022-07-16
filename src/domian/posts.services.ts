@@ -3,7 +3,11 @@ import {PaginationPosts, PostInputModel, PostQuery, PostViewModel} from "../type
 import {bloggersService} from "./bloggers.service";
 
 export const postsService = {
-    async getPosts(queryParams?: PostQuery): Promise<PaginationPosts> {
+    async getPosts(queryParams?: PostQuery): Promise<PaginationPosts | null> {
+        if(queryParams?.id){
+            const bloggers = await bloggersService.getBloggerById(+queryParams?.id)
+            if(!bloggers) return null
+        }
         return await postsRepository.getPosts(queryParams)
     },
     async getPostById(id: number) {
