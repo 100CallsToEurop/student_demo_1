@@ -80,7 +80,7 @@ bloggersRouter.post('/:bloggerId/posts',
         const bloggerId: number = +req.params.bloggerId
         const {title, shortDescription, content}: BloggerPostInputModel  = req.body
         const newBlogPost = await postsService.createPost({title, shortDescription, content, bloggerId})
-        if(newBlogPost === null) res.status(400).send({ errorsMessages: [{ message: "Not found", field: "bloggerId" }] })
+        //if(newBlogPost === null) res.status(400).send({ errorsMessages: [{ message: "Not found", field: "bloggerId" }] })
         if(newBlogPost) {
             res.status(201).send(newBlogPost)
             return
