@@ -66,7 +66,7 @@ postsRouter.put('/:id',
     async (req: Request, res: Response)=>{
     const id = +req.params.id
     const isUpdate = await postsService.updatePostById(id, req.body)
-       / if(isUpdate === null) {
+        if(isUpdate === null) {
             res.status(400).send({errorsMessages: [{message: "Not found", field: "bloggerId"}]})
             return
         }
