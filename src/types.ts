@@ -1,5 +1,6 @@
 export type BloggerInputModel = Omit<BloggerViewModel, 'id'>
 export type BloggerViewModel = {
+    _id?: string
     id: number,
     name: string,
     youtubeUrl: string
@@ -7,6 +8,7 @@ export type BloggerViewModel = {
 
 export type PostInputModel = Omit<PostViewModel, 'id' | 'bloggerName'>
 export type PostViewModel  = {
+    _id?: string
     id: number,
     title: string,
     shortDescription: string,

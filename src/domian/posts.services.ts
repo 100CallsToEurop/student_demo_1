@@ -28,6 +28,8 @@ export const postsService = {
             bloggerId: +bloggerId,
             bloggerName: blogger.name
         }
-        return await postsRepository.createPost(newPost)
+        await postsRepository.createPost(newPost)
+        delete newPost._id
+        return newPost
     }
 }

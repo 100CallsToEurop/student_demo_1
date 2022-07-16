@@ -17,7 +17,10 @@ bloggersRouter.get('/', async (req: Request, res: Response) => {
 bloggersRouter.get('/:id', async (req: Request, res: Response) => {
     const id = +req.params.id
     const blogger = await bloggersService.getBloggerById(id)
-    if (blogger) res.status(200).json(blogger)
+    if (blogger) {
+        res.status(200).json(blogger)
+        return
+    }
     res.status(404).send('Not found')
 })
 bloggersRouter.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
@@ -35,8 +38,10 @@ bloggersRouter.post('/',
     const newBloger = await bloggersService.createBlogger(req.body)
     if(newBloger) {
         res.status(201).json(newBloger)
+        return
     }
     res.status(400).send('Bad request')
+
 })
 bloggersRouter.put('/:id',
     authMiddleware,
@@ -49,6 +54,7 @@ bloggersRouter.put('/:id',
     if (isUpdate) {
         const blogger = await bloggersService.getBloggerById(id)
         res.status(204).json(blogger)
+        return
     }
     res.status(404).send('NotFound')
 })
@@ -58,7 +64,10 @@ bloggersRouter.get('/:id/posts', async (req: Request, res: Response) => {
     const id = req.params.id
     const {page, pageSize}: PostQuery = req.query
     const bloggerPosts = await postsService.getPosts({id, page, pageSize})
-    if (bloggerPosts) res.status(200).json(bloggerPosts)
+    if (bloggerPosts) {
+        res.status(200).json(bloggerPosts)
+        return
+    }
     res.status(404).send('Not found')
 })
 bloggersRouter.post('/:id/posts',
@@ -74,6 +83,7 @@ bloggersRouter.post('/:id/posts',
         if(newBlogPost === null) res.status(400).send({ errorsMessages: [{ message: "Not found", field: "bloggerId" }] })
         if(newBlogPost) {
             res.status(201).send(newBlogPost)
+            return
         }
         res.status(400).send('Bad request')
     })

@@ -4,8 +4,6 @@ import {BloggerViewModel, PostViewModel} from "../types"
 
 const uri = `mongodb+srv://user:testDatabase@cluster0.tuuab.mongodb.net/?retryWrites=true&w=majority`;
 
-
-
 export const client = new MongoClient(uri)
 const db = client.db("backend")
 export const bloggersCollection = db.collection<BloggerViewModel>("bloggers")

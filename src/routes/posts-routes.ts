@@ -21,13 +21,19 @@ postsRouter.get('/', async (req: Request, res: Response) => {
 postsRouter.get('/:id', async (req: Request, res: Response) => {
     const id: number = +req.params.id;
     const post = await postsService.getPostById(id)
-    if(!post) res.status(404).send('Not found')
-    res.status(200).send(post)
+    if(post) {
+        res.status(200).send(post)
+        return
+    }
+    res.status(404).send('Not found')
+
 })
 postsRouter.delete('/:id', authMiddleware, async (req: Request, res: Response)=>{
     const id = +req.params.id
-    if (await postsService.deletePostById(id))
+    if (await postsService.deletePostById(id)) {
         res.status(204).send('No Content')
+        return
+    }
     res.status(404).send('Not found')
 })
 postsRouter.post('/',
@@ -39,12 +45,15 @@ postsRouter.post('/',
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
     const newPosts = await postsService.createPost(req.body)
-        if(newPosts === null) res.status(400).send({ errorsMessages: [{ message: "Not found", field: "bloggerId" }] })
+        if(newPosts === null) {
+            res.status(400).send({errorsMessages: [{message: "Not found", field: "bloggerId"}]})
+            return
+        }
     if(newPosts) {
         res.status(201).send(newPosts)
+        return
     }
     res.status(400).send('Bad request')
-
 })
 
 postsRouter.put('/:id',
@@ -57,10 +66,14 @@ postsRouter.put('/:id',
     async (req: Request, res: Response)=>{
     const id = +req.params.id
     const isUpdate = await postsService.updatePostById(id, req.body)
-        if(isUpdate === null) res.status(400).send({ errorsMessages: [{ message: "Not found", field: "bloggerId" }] })
+        if(isUpdate === null) {
+            res.status(400).send({errorsMessages: [{message: "Not found", field: "bloggerId"}]})
+            return
+        }
     if (isUpdate) {
         const blogger = await postsService.getPostById(id)
         res.status(204).send(blogger)
+        return
     }
     res.status(404).send('NotFound')
 })
