@@ -7,16 +7,18 @@ export const postsRepository = {
         const pageNumber = Number(queryParams?.page) | 1
         const pageSize = Number(queryParams?.pageSize) | 10
         const skip: number = (pageNumber-1) * pageSize
+        const count = await bloggersCollection.find().count()
+
         let filter: any = {}
         if(queryParams?.id){
             filter['bloggerId'] = {$regex: +queryParams.id}
         }
 
         const result: PaginationPosts= {
-            pagesCount: await postsCollection.find(filter).count(),
+            pagesCount: Math.ceil(count/pageSize),
             page: pageNumber,
             pageSize: pageSize,
-            totalCount: await postsCollection.find().count(),
+            totalCount: count,
             items: await postsCollection.find(filter, {projection:{ _id: 0 }}).skip(skip).limit(pageSize).toArray()
         }
 
