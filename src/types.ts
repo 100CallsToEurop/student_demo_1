@@ -27,8 +27,8 @@ export type PostQuery = {
 
 export type BloggerQuery = {
     name?: string,
-    page?: string,
-    pageSize?: string
+    PageNumber?: string,
+    PageSize?: string
 }
 
 
