@@ -60,8 +60,8 @@ bloggersRouter.put('/:id',
 })
 
 //for Posts
-bloggersRouter.get('/:id/posts', async (req: Request, res: Response) => {
-    const id = req.params.id
+bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
+    const id = req.params.bloggerId
     const {page, pageSize}: PostQuery = req.query
     const bloggerPosts = await postsService.getPosts({id, page, pageSize})
     if (bloggerPosts) {
@@ -70,14 +70,14 @@ bloggersRouter.get('/:id/posts', async (req: Request, res: Response) => {
     }
     res.status(404).send('Not found')
 })
-bloggersRouter.post('/:id/posts',
+bloggersRouter.post('/:bloggerId/posts',
     authMiddleware,
     titleValidationPosts,
     shortDescriptionValidation,
     contentValidation,
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
-        const bloggerId: number = +req.params.id
+        const bloggerId: number = +req.params.bloggerId
         const {title, shortDescription, content}: BloggerPostInputModel  = req.body
         const newBlogPost = await postsService.createPost({title, shortDescription, content, bloggerId})
         if(newBlogPost === null) res.status(400).send({ errorsMessages: [{ message: "Not found", field: "bloggerId" }] })
