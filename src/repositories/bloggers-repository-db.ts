@@ -5,8 +5,8 @@ import {BloggerInputModel, BloggerQuery, BloggerViewModel, PaginationBloggers} f
 export const bloggersRepository = {
     async getBloggers(queryParams?: BloggerQuery): Promise<PaginationBloggers/*BloggerViewModel[]*/> {
 
-        const pageNumber = Number(queryParams?.PageNumber) | 1
-        const pageSize = Number(queryParams?.PageSize) | 10
+        let pageNumber = Number(queryParams?.PageNumber) || 1
+        let pageSize = Number(queryParams?.PageSize) || 10
         const skip: number = (pageNumber-1) * pageSize
         const count = await bloggersCollection.countDocuments()
 

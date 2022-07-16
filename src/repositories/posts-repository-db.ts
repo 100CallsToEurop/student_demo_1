@@ -4,8 +4,8 @@ import {bloggersRepository} from "./bloggers-repository-db";
 
 export const postsRepository = {
     async getPosts(queryParams?: PostQuery): Promise<PaginationPosts> {
-        const pageNumber = Number(queryParams?.PageNumber) | 1
-        const pageSize = Number(queryParams?.PageSize) | 10
+        const pageNumber = Number(queryParams?.PageNumber) || 1
+        const pageSize = Number(queryParams?.PageSize) || 10
         const skip: number = (pageNumber-1) * pageSize
         const count = await bloggersCollection.countDocuments()
 
