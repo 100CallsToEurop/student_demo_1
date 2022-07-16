@@ -85,5 +85,5 @@ bloggersRouter.post('/:bloggerId/posts',
             res.status(201).send(newBlogPost)
             return
         }
-        res.status(400).send('Bad request')
+        res.status(404).send('Not found')
     })
