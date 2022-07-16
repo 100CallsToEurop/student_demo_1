@@ -45,10 +45,10 @@ postsRouter.post('/',
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
     const newPosts = await postsService.createPost(req.body)
-        /*if(newPosts === null) {
+        if(newPosts === null) {
             res.status(400).send({errorsMessages: [{message: "Not found", field: "bloggerId"}]})
             return
-        }*/
+        }
     if(newPosts) {
         res.status(201).send(newPosts)
         return
