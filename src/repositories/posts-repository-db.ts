@@ -11,7 +11,7 @@ export const postsRepository = {
 
         let filter: any = {}
         if(queryParams?.id){
-            filter['bloggerId'] = {$regex: +queryParams.id}
+            filter['bloggerId'] = {$regex: queryParams.id}
         }
         const count = await bloggersCollection.find(filter).toArray()
 
