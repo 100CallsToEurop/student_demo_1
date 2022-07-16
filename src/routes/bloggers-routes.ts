@@ -10,9 +10,9 @@ import {BloggerPostInputModel, BloggerQuery, Pagination, PostQuery} from "../typ
 export const bloggersRouter = Router({})
 
 bloggersRouter.get('/', async (req: Request, res: Response) => {
-    const {name, PageNumber, PageSize}: BloggerQuery = req.query
+    const {SearchNameTerm, PageNumber, PageSize}: BloggerQuery = req.query
     console.log(PageNumber, PageSize)
-    const bloggers = await bloggersService.getBloggers({ name, PageNumber, PageSize})
+    const bloggers = await bloggersService.getBloggers({ SearchNameTerm, PageNumber, PageSize})
     res.status(200).json(bloggers)
 })
 bloggersRouter.get('/:id', async (req: Request, res: Response) => {

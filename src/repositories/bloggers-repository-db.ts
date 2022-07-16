@@ -11,8 +11,8 @@ export const bloggersRepository = {
         const count = await bloggersCollection.countDocuments()
 
         let filter: any = {}
-        if(queryParams?.name){
-            filter['name'] = {$regex: queryParams.name}
+        if(queryParams?.SearchNameTerm){
+            filter['name'] = {$regex: queryParams.SearchNameTerm}
         }
 
         const result: PaginationBloggers = {
