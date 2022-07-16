@@ -8,8 +8,7 @@ export const bloggersRepository = {
         const pageNumber = Number(queryParams?.PageNumber) | 1
         const pageSize = Number(queryParams?.PageSize) | 10
         const skip: number = (pageNumber-1) * pageSize
-        const count = await bloggersCollection.find().count()
-
+        const count = await bloggersCollection.countDocuments()
 
         let filter: any = {}
         if(queryParams?.name){
