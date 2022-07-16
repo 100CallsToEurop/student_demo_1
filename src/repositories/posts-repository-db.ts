@@ -6,17 +6,12 @@ export const postsRepository = {
         const pageNumber = Number(queryParams?.PageNumber) || 1
         const pageSize = Number(queryParams?.PageSize) || 10
         const skip: number = (pageNumber-1) * pageSize
-        let count = 0
+        let count = await postsCollection.countDocuments()
 
         let filter: any = {}
-
-        if(queryParams?.id){
+        if(queryParams?.id !== undefined){
             filter['bloggerId'] = {$regex: queryParams.id}
             count = (await postsCollection.find(filter).toArray()).length
-        }
-
-        if(queryParams?.id === undefined){
-            count = await postsCollection.countDocuments()
         }
 
         const result: PaginationPosts= {
