@@ -8,20 +8,21 @@ export const bloggersRepository = {
         let pageNumber = Number(queryParams?.PageNumber) || 1
         let pageSize = Number(queryParams?.PageSize) || 10
         const skip: number = (pageNumber-1) * pageSize
-
+        let count = await bloggersCollection.countDocuments()
 
         let filter: any = {}
         if(queryParams?.SearchNameTerm){
             filter['name'] = {$regex: queryParams.SearchNameTerm}
+            count = (await bloggersCollection.find(filter).toArray()).length
         }
 
-        const count = await bloggersCollection.find(filter).toArray()
+
 
         const result: PaginationBloggers = {
-            pagesCount: Math.ceil(count.length/pageSize),
+            pagesCount: Math.ceil(count/pageSize),
             page: pageNumber,
             pageSize: pageSize,
-            totalCount: count.length,
+            totalCount: count,
             items: await bloggersCollection.find(filter, {projection:{ _id: 0 }}).skip(skip).limit(pageSize).toArray()
         }
 
