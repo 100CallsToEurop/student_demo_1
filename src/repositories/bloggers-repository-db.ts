@@ -19,7 +19,7 @@ export const bloggersRepository = {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: await bloggersCollection.find().count(),
-            items: await bloggersCollection.find({...filter, projection: { _id: 0}}).skip(skip).limit(pageSize).toArray()
+            items: await bloggersCollection.find(filter, {projection:{ _id: 0 }}).skip(skip).limit(pageSize).toArray()
         }
 
         return result

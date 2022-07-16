@@ -4,8 +4,8 @@ import {bloggersRepository} from "./bloggers-repository-db";
 
 export const postsRepository = {
     async getPosts(queryParams?: PostQuery): Promise<PaginationPosts> {
-        const pageNumber = Number(queryParams?.page)
-        const pageSize = Number(queryParams?.pageSize)
+        const pageNumber = Number(queryParams?.page) | 1
+        const pageSize = Number(queryParams?.pageSize) | 10
         const skip: number = (pageNumber-1) * pageSize
         let filter: any = {}
         if(queryParams?.id){
@@ -17,7 +17,7 @@ export const postsRepository = {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: await postsCollection.find().count(),
-            items: await postsCollection.find({...filter, projection: { _id: 0}}).skip(skip).limit(pageSize).toArray()
+            items: await postsCollection.find(filter, {projection:{ _id: 0 }}).skip(skip).limit(pageSize).toArray()
         }
 
         return result
