@@ -17,9 +17,14 @@ export const postsService = {
     async deletePostById(id: number): Promise<boolean> {
         return await postsRepository.deletePostById(id)
     },
-    async updatePostById(id: number, updatePost: PostInputModel): Promise<boolean> {
+    async updatePostById(id: number, updatePost: PostInputModel): Promise<boolean | null> {
         const {title, shortDescription, content, bloggerId }  = updatePost
-        return await postsRepository.updatePostById(id, {title, shortDescription, content, bloggerId })
+        const blogger = await bloggersService.getBloggerById(+bloggerId)
+        if (blogger) {
+            return await postsRepository.updatePostById(id, {title, shortDescription, content, bloggerId })
+        }
+        return null
+
     },
     async createPost(createParam: PostInputModel) {
         const {title, shortDescription, content, bloggerId }  = createParam
