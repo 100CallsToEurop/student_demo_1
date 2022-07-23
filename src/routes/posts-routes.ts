@@ -89,7 +89,11 @@ postsRouter.get('/:postId/comments', async (req: Request, res: Response) => {
     const postId = req.params.postId
     const {PageNumber, PageSize}: CommentQuery = req.query
     const comments = await commentsService.getComments({postId, PageNumber, PageSize})
-    res.status(200).json(comments)
+    if (comments) {
+        res.status(200).json(comments)
+        return
+    }
+    res.status(404).send('Not found')
 })
 
 postsRouter.post('/:postId/comments',
