@@ -16,7 +16,9 @@ export const usersService= {
             passwordSalt,
             createAt: new Date()
         }
-        return await usersRepository.createUser(newUser)
+        await usersRepository.createUser(newUser)
+        delete newUser._id
+        return newUser
     },
 
     async getUsers(queryParams?: UserQuery): Promise<PaginationUsers>{

@@ -44,8 +44,7 @@ export const postsRepository = {
         return result.matchedCount === 1
     },
     async createPost(createParam: PostViewModel): Promise<PostViewModel> {
-        const params = {...createParam}
-        await postsCollection.insertOne(params)
+        await postsCollection.insertOne(createParam)
         return createParam
     }
 }

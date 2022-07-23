@@ -43,8 +43,7 @@ export const bloggersRepository = {
         return result.matchedCount === 1
     },
     async createBlogger(createParam: BloggerViewModel): Promise<BloggerViewModel>{
-        const params = {...createParam}
-        await bloggersCollection.insertOne(params)
+        await bloggersCollection.insertOne(createParam)
         return createParam
     }
 }

@@ -23,6 +23,8 @@ export const bloggersService= {
             ...createParam,
             id: +(new Date()),
         }
-        return await bloggersRepository.createBlogger(newBlogger)
+        await bloggersRepository.createBlogger(newBlogger)
+        delete newBlogger._id
+        return newBlogger
     }
 }
