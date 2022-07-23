@@ -9,14 +9,14 @@ import {usersService} from "./users.service";
 
 export const commentsService= {
 
-    async createComment(postId: string, createParam: CommentInputModel):Promise<CommentViewModel | null> {
-        const user = await usersService.findUserById(createParam.userId)
+    async createComment(userId: string, postId: string, createParam: CommentInputModel):Promise<CommentViewModel | null> {
+        const user = await usersService.findUserById(userId)
         const posts = await postsService.getPostById(postId)
         if (!posts) return null
         const newComment: CommentViewModel = {
             id: (+(new Date())).toString(),
             content: createParam.content,
-            userId: createParam.userId,
+            userId: userId,
             userLogin: user!.login,
             addedAt: (new Date()).toString()
         }
@@ -32,8 +32,8 @@ export const commentsService= {
         return await commentsRepository.getComments(queryParams)
     },
 
-    async updateCommentById(commentId: string, updateComment: CommentInputModel): Promise<boolean>{
-        return await commentsRepository.updateCommentById(commentId, updateComment)
+    async updateCommentById(id: string, updateComment: CommentInputModel): Promise<boolean>{
+        return await commentsRepository.updateCommentById(id, updateComment)
     },
     async getCommentById(commentId: string): Promise<CommentViewModel | null> {
         const comment = await commentsRepository.getCommentById(commentId)

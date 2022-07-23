@@ -23,9 +23,9 @@ commentsRouter.put('/',
     commentValidation,
     inputValidatorMiddleware,
     async (req: Request, res: Response) =>{
-    const commentId = req.user!.id
+    const id = req.params.commentId
     const {content}: CommentInputModel = req.body
-    const isUpdate = await commentsService.updateCommentById(commentId, {content})
+    const isUpdate = await commentsService.updateCommentById(id,{content})
     if (isUpdate) {
         res.status(204).send('No Content')
         return

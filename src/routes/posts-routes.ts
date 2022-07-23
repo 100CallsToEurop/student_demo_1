@@ -100,7 +100,7 @@ postsRouter.post('/:postId/comments',
         const postId = req.params.postId
         const userId = req.user!.id
         const {content}  = req.body
-        const newComments = await commentsService.createComment(postId,{userId, content})
+        const newComments = await commentsService.createComment(userId, postId,{content})
         if(newComments === null) {
             res.status(400).send({errorsMessages: [{message: "Not found", field: "bloggerId"}]})
             return
