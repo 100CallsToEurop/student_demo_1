@@ -8,7 +8,7 @@ import {authMiddlewareJWT} from "../middleware/auth-middleware-jwt";
 
 export const commentsRouter = Router({})
 
-commentsRouter.get('/', async (req: Request, res: Response) =>{
+commentsRouter.get('/:id', async (req: Request, res: Response) =>{
     const id = req.params.id
     const comment = await commentsService.getCommentById(id)
     if (comment) {
@@ -18,7 +18,7 @@ commentsRouter.get('/', async (req: Request, res: Response) =>{
     res.status(404).send('Not found')
 })
 
-commentsRouter.put('/',
+commentsRouter.put('/:id',
     authMiddlewareJWT,
     commentValidation,
     inputValidatorMiddleware,
@@ -33,7 +33,7 @@ commentsRouter.put('/',
     res.status(404).send('NotFound')
 })
 
-commentsRouter.delete('/', authMiddlewareJWT, async (req: Request, res: Response) =>{
+commentsRouter.delete('/:id', authMiddlewareJWT, async (req: Request, res: Response) =>{
     const commentId = req.user!.id
     if (await commentsService.deleteCommentById(commentId)) {
         res.status(204).send('No Content')

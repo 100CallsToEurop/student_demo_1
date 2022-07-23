@@ -98,7 +98,6 @@ postsRouter.post('/:postId/comments',
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
         const postId = req.params.postId
-        //const userId = (req.user!.id).toString()
         const {content}  = req.body
         console.log(req.user!.id)
         const newComments = await commentsService.createComment(req.user!.id, postId,{content})
