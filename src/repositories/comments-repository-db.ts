@@ -14,11 +14,8 @@ export const commentsRepository = {
 
         let filter: any = {}
         if(queryParams?.postId !== undefined){
-
-
             filter['postsId'] = queryParams.postId
             count = (await commentsCollection.find(filter).toArray()).length
-
         }
         else{
             count = await commentsCollection.countDocuments()
@@ -47,7 +44,7 @@ export const commentsRepository = {
     },
 
     async getCommentById(id: string): Promise<CommentViewModel | null>{
-        const comment = await commentsCollection.findOne({id}, {projection:{ _id: 0 }})
+        const comment = await commentsCollection.findOne({id}, {projection:{ _id: 0, postId: 0 }})
         if(comment) return comment
         return null
     },

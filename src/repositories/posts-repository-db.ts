@@ -1,4 +1,4 @@
-import {postsCollection} from "./db";
+import {commentsCollection, postsCollection} from "./db";
 import { PostInputModel, PostQuery, PostViewModel} from "../types/types";
 import {PaginationPosts} from "../types/pagination.types";
 
@@ -36,6 +36,7 @@ export const postsRepository = {
         return null
     },
     async deletePostById(id: string): Promise<boolean> {
+        await commentsCollection.deleteMany({postId: id})
         const result = await postsCollection.deleteOne({id:id})
         return result.deletedCount === 1
     },
