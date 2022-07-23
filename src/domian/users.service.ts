@@ -6,7 +6,7 @@ import {bloggersRepository} from "../repositories/bloggers-repository-db";
 
 
 export const usersService= {
-    async createUser(userParam: UserInputModel): Promise<any/*UserViewModel*/>{
+    async createUser(userParam: UserInputModel): Promise<UserViewModel>{
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(userParam.password, passwordSalt)
         const newUser: UserViewModel = {
@@ -17,11 +17,14 @@ export const usersService= {
             createAt: new Date()
         }
         await usersRepository.createUser(newUser)
+        delete newUser.passwordHash
+        delete newUser.passwordSalt
+        delete newUser.createAt
         return newUser
     },
 
     async getUsers(queryParams?: UserQuery): Promise<PaginationUsers>{
-        return await usersRepository.getUsers(queryParams)
+        return usersRepository.getUsers(queryParams)
     },
 
 async findUserById(id: string): Promise<UserViewModel | null> {
@@ -35,10 +38,14 @@ async findUserById(id: string): Promise<UserViewModel | null> {
 
     async checkCredentials(userParam: UserInputModel): Promise<UserViewModel | null>{
        const user = await usersRepository.findByLogin(userParam.login)
-        if(!user) return null
-        const passwordHash = await this._generateHash(userParam.password, user.passwordSalt)
-        if(passwordHash !== user.passwordHash) return null
-        return user
+        if(!user) {
+            return null
+        }
+        else {
+            const passwordHash = await this._generateHash(userParam.password, user.passwordSalt!)
+            if (passwordHash !== user.passwordHash) return null
+            return user
+        }
     },
 
     async _generateHash(password: string, salt: string){

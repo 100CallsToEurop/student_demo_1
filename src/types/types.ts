@@ -61,9 +61,9 @@ export type UserInputModel = LoginInputModel
 export type UserViewModel = Omit<UserInputModel, 'password'> & {
     _id?: string
     id:	string,
-    passwordHash: string,
-    passwordSalt: string,
-    createAt: Date
+    passwordHash?: string,
+    passwordSalt?: string,
+    createAt?: Date
 }
 
 
