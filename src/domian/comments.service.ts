@@ -43,9 +43,10 @@ export const commentsService= {
        return await commentsRepository.deleteCommentById(commentId)
    },
    async checkCommentById(currentUserId: string, commentId: string){
-        const comment = await this.getCommentById(commentId)
-       const userCheck = await usersService.findUserById(comment!.userId)
-       if(currentUserId === userCheck?.id) return true
+        const comment = await commentsRepository.getCommentById(commentId)
+       if(!comment) return false
+       const userCheck = await usersService.findUserById(comment.userId)
+       if(currentUserId === userCheck!.id) return true
        return false
    }
 }
