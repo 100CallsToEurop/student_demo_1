@@ -4,7 +4,7 @@ export type BloggerInputModel = {
     youtubeUrl: string
 }
 export type BloggerViewModel = BloggerInputModel & {
-    id: number,
+    id: string,
 }
 
 export type PostInputModel  = {
@@ -12,11 +12,11 @@ export type PostInputModel  = {
     title: string,
     shortDescription: string,
     content: string,
-    bloggerId: number,
+    bloggerId: string,
 }
 
 export type PostViewModel = PostInputModel & {
-    id: number,
+    id: string,
     bloggerName: string
 }
 

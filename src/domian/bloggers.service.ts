@@ -7,24 +7,23 @@ export const bloggersService= {
     async getBloggers(queryParams?: BloggerQuery): Promise<PaginationBloggers> {
         return bloggersRepository.getBloggers(queryParams)
     },
-    async getBloggerById(id: number): Promise<BloggerViewModel | null> {
+    async getBloggerById(id: string): Promise<BloggerViewModel | null> {
         const blogger = await bloggersRepository.getBloggerById(id)
         return blogger
     },
-    async deleteBloggerById(id: number): Promise<boolean> {
+    async deleteBloggerById(id: string): Promise<boolean> {
         return await bloggersRepository.deleteBloggerById(id)
     },
-    async updateBloggerById(id: number, updateParam: BloggerInputModel): Promise<boolean> {
+    async updateBloggerById(id: string, updateParam: BloggerInputModel): Promise<boolean> {
         return await bloggersRepository.updateBloggerById(id, updateParam)
 
     },
     async createBlogger(createParam: BloggerInputModel): Promise<BloggerViewModel>{
         const newBlogger: BloggerViewModel = {
             ...createParam,
-            id: +(new Date()),
+            id: (+(new Date())).toString(),
         }
         await bloggersRepository.createBlogger(newBlogger)
-        delete newBlogger._id
         return newBlogger
     }
 }

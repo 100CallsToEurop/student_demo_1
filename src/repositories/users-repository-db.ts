@@ -25,7 +25,8 @@ export const usersRepository = {
     },
 
     async createUser(createParam: UserViewModel): Promise<UserViewModel>{
-        await usersCollection.insertOne(createParam)
+        const params = {...createParam}
+        await usersCollection.insertOne(params)
         return createParam
     },
 

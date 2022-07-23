@@ -29,21 +29,22 @@ export const bloggersRepository = {
 
         return result
     },
-    async getBloggerById(id: number): Promise<BloggerViewModel | null> {
+    async getBloggerById(id: string): Promise<BloggerViewModel | null> {
        const bloger = await bloggersCollection.findOne({id},{ projection: { _id: 0}})
        return bloger
     },
-    async deleteBloggerById(id: number): Promise<boolean> {
+    async deleteBloggerById(id: string): Promise<boolean> {
         const result = await bloggersCollection.deleteOne({id:id})
         await postsCollection.deleteMany({bloggerId: id})
         return result.deletedCount === 1
     },
-    async updateBloggerById(id: number, updateParam: BloggerInputModel): Promise<boolean> {
+    async updateBloggerById(id: string, updateParam: BloggerInputModel): Promise<boolean> {
         const result = await bloggersCollection.updateOne({id: id}, { $set: updateParam})
         return result.matchedCount === 1
     },
     async createBlogger(createParam: BloggerViewModel): Promise<BloggerViewModel>{
-        await bloggersCollection.insertOne(createParam)
+        const params = {...createParam}
+        await bloggersCollection.insertOne(params)
         return createParam
     }
 }

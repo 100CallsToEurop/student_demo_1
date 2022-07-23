@@ -17,7 +17,6 @@ export const usersService= {
             createAt: new Date()
         }
         await usersRepository.createUser(newUser)
-        delete newUser._id
         return newUser
     },
 

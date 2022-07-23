@@ -30,21 +30,22 @@ export const postsRepository = {
 
         return result
     },
-    async getPostById(id: number) {
+    async getPostById(id: string) {
         let post = await postsCollection.findOne({id}, {projection: { _id: 0}})
         if(post) return post
         return null
     },
-    async deletePostById(id: number): Promise<boolean> {
+    async deletePostById(id: string): Promise<boolean> {
         const result = await postsCollection.deleteOne({id:id})
         return result.deletedCount === 1
     },
-    async updatePostById(id: number, updatePost: PostInputModel): Promise<boolean> {
+    async updatePostById(id: string, updatePost: PostInputModel): Promise<boolean> {
         const result = await postsCollection.updateOne({id: id}, {$set: updatePost})
         return result.matchedCount === 1
     },
     async createPost(createParam: PostViewModel): Promise<PostViewModel> {
-        await postsCollection.insertOne(createParam)
+        const params = {...createParam}
+        await postsCollection.insertOne(params)
         return createParam
     }
 }

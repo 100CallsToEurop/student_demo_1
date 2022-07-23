@@ -15,7 +15,7 @@ bloggersRouter.get('/', async (req: Request, res: Response) => {
     res.status(200).json(bloggers)
 })
 bloggersRouter.get('/:id', async (req: Request, res: Response) => {
-    const id = +req.params.id
+    const id = req.params.id
     const blogger = await bloggersService.getBloggerById(id)
     if (blogger) {
         res.status(200).json(blogger)
@@ -24,7 +24,7 @@ bloggersRouter.get('/:id', async (req: Request, res: Response) => {
     res.status(404).send('Not found')
 })
 bloggersRouter.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
-    const id = +req.params.id
+    const id = req.params.id
     if (await bloggersService.deleteBloggerById(id)) {
         res.status(204).send('No Content')
         return
@@ -52,7 +52,7 @@ bloggersRouter.put('/:id',
     titleValidation,
     inputValidatorMiddleware,
     async (req: Request, res: Response)=>{
-    const id = +req.params.id
+    const id = req.params.id
     const {name, youtubeUrl} = req.body
     const isUpdate = await bloggersService.updateBloggerById(id, {name, youtubeUrl})
     if (isUpdate) {
@@ -81,7 +81,7 @@ bloggersRouter.post('/:bloggerId/posts',
     contentValidation,
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
-        const bloggerId: number = +req.params.bloggerId
+        const bloggerId = req.params.bloggerId
         const {title, shortDescription, content}: BloggerPostInputModel  = req.body
         const newBlogPost = await postsService.createPost({title, shortDescription, content, bloggerId})
        if(newBlogPost) {
