@@ -18,7 +18,7 @@ commentsRouter.get('/:id', async (req: Request, res: Response) =>{
     res.status(404).send('Not found')
 })
 
-commentsRouter.put('/:id',
+commentsRouter.put('/:commentId',
     authMiddlewareJWT,
     commentValidation,
     inputValidatorMiddleware,
