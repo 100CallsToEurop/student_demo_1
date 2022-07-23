@@ -18,9 +18,11 @@ export const commentsService= {
             content: createParam.content,
             userId: userId,
             userLogin: user!.login,
-            addedAt: (new Date()).toString()
+            addedAt: (new Date()).toString(),
+            postId
         }
         await commentsRepository.createComments(newComment)
+        delete newComment.postId
         return newComment
     },
 

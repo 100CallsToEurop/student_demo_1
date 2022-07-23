@@ -103,7 +103,6 @@ postsRouter.post('/:postId/comments',
     async (req: Request, res: Response) => {
         const postId = req.params.postId
         const {content}  = req.body
-        console.log(req.user!.id)
         const newComments = await commentsService.createComment(req.user!.id, postId,{content})
         if(newComments) {
             res.status(201).send(newComments)

@@ -46,7 +46,6 @@ export type CommentQuery = {
 }
 
 export type CommentInputModel = {
-
     content: string
 }
 export type CommentViewModel = CommentInputModel & {
@@ -54,6 +53,7 @@ export type CommentViewModel = CommentInputModel & {
     userId: string
     userLogin: string
     addedAt: string
+    postId?: string
 }
 
 export type LoginInputModel = {
