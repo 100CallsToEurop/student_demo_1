@@ -44,7 +44,7 @@ export const commentsService= {
    },
    async checkCommentById(currentUserId: string, commentId: string){
         const comment = await commentsRepository.getCommentById(commentId)
-       if(!comment) return false
+       if(!comment) return null
        const userCheck = await usersService.findUserById(comment.userId)
        if(currentUserId === userCheck!.id) return true
        return false
