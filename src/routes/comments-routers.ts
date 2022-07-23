@@ -33,8 +33,8 @@ commentsRouter.put('/:id',
     res.status(404).send('NotFound')
 })
 
-commentsRouter.delete('/:id', authMiddlewareJWT, async (req: Request, res: Response) =>{
-    const commentId = req.user!.id
+commentsRouter.delete('/:commentId', authMiddlewareJWT, async (req: Request, res: Response) =>{
+    const commentId = req.params.commentId
     if (await commentsService.deleteCommentById(commentId)) {
         res.status(204).send('No Content')
         return
