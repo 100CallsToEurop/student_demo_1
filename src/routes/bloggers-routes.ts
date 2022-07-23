@@ -5,7 +5,7 @@ import {authMiddleware} from "../middleware/auth-middleware";
 import {nameValidation, titleValidation} from "../middleware/blogger-middleware";
 import {contentValidation, shortDescriptionValidation, titleValidationPosts} from "../middleware/post-middleware";
 import {postsService} from "../domian/posts.services";
-import {BloggerPostInputModel, BloggerQuery, Pagination, PostQuery} from "../types";
+import {BloggerInputModel, BloggerPostInputModel, BloggerQuery, PostQuery} from "../types/types";
 
 export const bloggersRouter = Router({})
 
@@ -37,7 +37,8 @@ bloggersRouter.post('/',
     titleValidation,
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
-    const newBloger = await bloggersService.createBlogger(req.body)
+    const {name, youtubeUrl}: BloggerInputModel = req.body
+    const newBloger = await bloggersService.createBlogger({name, youtubeUrl})
     if(newBloger) {
         res.status(201).json(newBloger)
         return
@@ -52,7 +53,8 @@ bloggersRouter.put('/:id',
     inputValidatorMiddleware,
     async (req: Request, res: Response)=>{
     const id = +req.params.id
-    const isUpdate = await bloggersService.updateBloggerById(id, req.body)
+    const {name, youtubeUrl} = req.body
+    const isUpdate = await bloggersService.updateBloggerById(id, {name, youtubeUrl})
     if (isUpdate) {
         const blogger = await bloggersService.getBloggerById(id)
         res.status(204).json(blogger)
@@ -82,8 +84,7 @@ bloggersRouter.post('/:bloggerId/posts',
         const bloggerId: number = +req.params.bloggerId
         const {title, shortDescription, content}: BloggerPostInputModel  = req.body
         const newBlogPost = await postsService.createPost({title, shortDescription, content, bloggerId})
-        //if(newBlogPost === null) res.status(400).send({ errorsMessages: [{ message: "Not found", field: "bloggerId" }] })
-        if(newBlogPost) {
+       if(newBlogPost) {
             res.status(201).send(newBlogPost)
             return
         }

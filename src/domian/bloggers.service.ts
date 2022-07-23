@@ -1,12 +1,11 @@
 
-import {BloggerInputModel, BloggerQuery, BloggerViewModel, Pagination, PaginationBloggers} from "../types";
+import {BloggerInputModel, BloggerQuery, BloggerViewModel} from "../types/types";
 import {bloggersRepository} from "../repositories/bloggers-repository-db";
+import {PaginationBloggers} from "../types/pagination.types";
 
 export const bloggersService= {
     async getBloggers(queryParams?: BloggerQuery): Promise<PaginationBloggers> {
         return bloggersRepository.getBloggers(queryParams)
-
-
     },
     async getBloggerById(id: number): Promise<BloggerViewModel | null> {
         const blogger = await bloggersRepository.getBloggerById(id)
@@ -16,19 +15,14 @@ export const bloggersService= {
         return await bloggersRepository.deleteBloggerById(id)
     },
     async updateBloggerById(id: number, updateParam: BloggerInputModel): Promise<boolean> {
-        const {name, youtubeUrl} = updateParam
-        return await bloggersRepository.updateBloggerById(id, { name, youtubeUrl})
+        return await bloggersRepository.updateBloggerById(id, updateParam)
 
     },
     async createBlogger(createParam: BloggerInputModel): Promise<BloggerViewModel>{
-        const {name, youtubeUrl} = createParam
         const newBlogger: BloggerViewModel = {
+            ...createParam,
             id: +(new Date()),
-            name,
-            youtubeUrl
         }
-        await bloggersRepository.createBlogger(newBlogger)
-        delete newBlogger._id
-        return newBlogger
+        return await bloggersRepository.createBlogger(newBlogger)
     }
 }

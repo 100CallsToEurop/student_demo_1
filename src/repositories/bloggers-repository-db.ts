@@ -1,5 +1,6 @@
 import {bloggersCollection, postsCollection} from "./db";
-import {BloggerInputModel, BloggerQuery, BloggerViewModel, PaginationBloggers} from "../types";
+import {BloggerInputModel, BloggerQuery, BloggerViewModel} from "../types/types";
+import {PaginationBloggers} from "../types/pagination.types";
 
 
 export const bloggersRepository = {
@@ -42,7 +43,8 @@ export const bloggersRepository = {
         return result.matchedCount === 1
     },
     async createBlogger(createParam: BloggerViewModel): Promise<BloggerViewModel>{
-        await bloggersCollection.insertOne(createParam)
+        const params = {...createParam}
+        await bloggersCollection.insertOne(params)
         return createParam
     }
 }

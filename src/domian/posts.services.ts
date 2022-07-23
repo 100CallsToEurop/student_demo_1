@@ -1,6 +1,7 @@
 import {postsRepository} from "../repositories/posts-repository-db";
-import {PaginationPosts, PostInputModel, PostQuery, PostViewModel} from "../types";
+import {PostInputModel, PostQuery, PostViewModel} from "../types/types";
 import {bloggersService} from "./bloggers.service";
+import {PaginationPosts} from "../types/pagination.types";
 
 export const postsService = {
     async getPosts(queryParams?: PostQuery): Promise<PaginationPosts | null> {
@@ -11,7 +12,6 @@ export const postsService = {
         return await postsRepository.getPosts(queryParams)
     },
 
-
     async getPostById(id: number) {
         return await postsRepository.getPostById(id)
     },
@@ -19,28 +19,19 @@ export const postsService = {
         return await postsRepository.deletePostById(id)
     },
     async updatePostById(id: number, updatePost: PostInputModel): Promise<boolean | null> {
-        const {title, shortDescription, content, bloggerId }  = updatePost
-        const blogger = await bloggersService.getBloggerById(+bloggerId)
-        if (blogger) {
-            return await postsRepository.updatePostById(id, {title, shortDescription, content, bloggerId })
-        }
+        const blogger = await bloggersService.getBloggerById(+updatePost.bloggerId)
+        if (blogger) return await postsRepository.updatePostById(id, updatePost)
         return null
 
     },
-    async createPost(createParam: PostInputModel) {
-        const {title, shortDescription, content, bloggerId }  = createParam
-        const blogger = await bloggersService.getBloggerById(+bloggerId)
+    async createPost(createParam: PostInputModel):Promise<PostViewModel | null>  {
+        const blogger = await bloggersService.getBloggerById(+createParam.bloggerId)
         if(!blogger) return null
         const newPost: PostViewModel = {
+            ...createParam,
             id: +(new Date()),
-            title,
-            shortDescription,
-            content,
-            bloggerId: +bloggerId,
             bloggerName: blogger.name
         }
-        await postsRepository.createPost(newPost)
-        delete newPost._id
-        return newPost
+        return await postsRepository.createPost(newPost)
     }
 }

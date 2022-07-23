@@ -1,5 +1,6 @@
 import {postsCollection} from "./db";
-import { PaginationPosts, PostInputModel, PostQuery, PostViewModel} from "../types";
+import { PostInputModel, PostQuery, PostViewModel} from "../types/types";
+import {PaginationPosts} from "../types/pagination.types";
 
 export const postsRepository = {
     async getPosts(queryParams?: PostQuery): Promise<PaginationPosts> {
@@ -7,7 +8,6 @@ export const postsRepository = {
         const pageSize = Number(queryParams?.PageSize) || 10
         const skip: number = (pageNumber-1) * pageSize
         let count = 0
-
 
         let filter: any = {}
         if(queryParams?.id !== undefined){
@@ -19,8 +19,6 @@ export const postsRepository = {
         else{
             count = await postsCollection.countDocuments()
         }
-
-
 
         const result: PaginationPosts= {
             pagesCount: Math.ceil(count/pageSize),
@@ -45,8 +43,9 @@ export const postsRepository = {
         const result = await postsCollection.updateOne({id: id}, {$set: updatePost})
         return result.matchedCount === 1
     },
-    async createPost(createParam: PostViewModel) {
-        await postsCollection.insertOne(createParam)
+    async createPost(createParam: PostViewModel): Promise<PostViewModel> {
+        const params = {...createParam}
+        await postsCollection.insertOne(params)
         return createParam
     }
 }

@@ -9,7 +9,7 @@ import {
     shortDescriptionValidation,
     titleValidationPosts
 } from "../middleware/post-middleware";
-import {PostQuery} from "../types";
+import {PostQuery} from "../types/types";
 
 export const postsRouter = Router({})
 
@@ -44,7 +44,8 @@ postsRouter.post('/',
     bloggerIdValidation,
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
-    const newPosts = await postsService.createPost(req.body)
+    const {title, shortDescription, content, bloggerId }  = req.body
+    const newPosts = await postsService.createPost({title, shortDescription, content, bloggerId })
         if(newPosts === null) {
             res.status(400).send({errorsMessages: [{message: "Not found", field: "bloggerId"}]})
             return
@@ -65,7 +66,8 @@ postsRouter.put('/:id',
     inputValidatorMiddleware,
     async (req: Request, res: Response)=>{
     const id = +req.params.id
-    const isUpdate = await postsService.updatePostById(id, req.body)
+    const {title, shortDescription, content, bloggerId }  = req.body
+    const isUpdate = await postsService.updatePostById(id, {title, shortDescription, content, bloggerId })
         if(isUpdate === null) {
             res.status(400).send({errorsMessages: [{message: "Not found", field: "bloggerId"}]})
             return

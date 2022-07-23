@@ -1,5 +1,5 @@
 import {MongoClient} from "mongodb";
-import {BloggerViewModel, PostViewModel} from "../types"
+import {BloggerViewModel, CommentViewModel, PostViewModel, UserViewModel} from "../types/types"
 
 
 const uri = `mongodb+srv://user:testDatabase@cluster0.tuuab.mongodb.net/?retryWrites=true&w=majority`;
@@ -8,6 +8,8 @@ export const client = new MongoClient(uri)
 const db = client.db("backend")
 export const bloggersCollection = db.collection<BloggerViewModel>("bloggers")
 export const postsCollection = db.collection<PostViewModel>("posts")
+export const usersCollection = db.collection<UserViewModel>("users")
+export const commentsCollection = db.collection<CommentViewModel>("comments")
 
 export async function runDb(){
     try{
