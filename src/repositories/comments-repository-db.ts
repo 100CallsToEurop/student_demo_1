@@ -14,7 +14,7 @@ export const commentsRepository = {
 
         let filter: any = {}
         if(queryParams?.postId !== undefined){
-            filter['postsId'] = queryParams.postId
+            filter['postId'] = queryParams.postId
             count = (await commentsCollection.find(filter).toArray()).length
         }
         else{
