@@ -25,12 +25,21 @@ commentsRouter.put('/:commentId',
     async (req: Request, res: Response) =>{
     const id = req.params.commentId
     const {content}: CommentInputModel = req.body
+        const myComment = await commentsService.checkCommentById(req.user!.id, id)
+        if(myComment === null) {
+            res.status(404).send('Not found')
+            return
+        }
+        if(myComment === false) {
+            res.status(403).send(403)
+            return
+        }
     const isUpdate = await commentsService.updateCommentById(id,{content})
     if (isUpdate) {
         res.status(204).send('No Content')
         return
     }
-    res.status(404).send('NotFound')
+        res.status(404).send('Not found')
 })
 
 commentsRouter.delete('/:commentId', authMiddlewareJWT, async (req: Request, res: Response) =>{
