@@ -98,16 +98,20 @@ postsRouter.post('/:postId/comments',
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
         const postId = req.params.postId
-        const userId = req.user!.id
+        //const userId = (req.user!.id).toString()
         const {content}  = req.body
-        const newComments = await commentsService.createComment(userId, postId,{content})
+        console.log(req.user!.id)
+        const newComments = await commentsService.createComment(req.user!.id, postId,{content})
         if(newComments === null) {
-            res.status(400).send({errorsMessages: [{message: "Not found", field: "bloggerId"}]})
+            res.status(400).send({errorsMessages: [{message: "Not found", field: "postId"}]})
             return
         }
         if(newComments) {
             res.status(201).send(newComments)
             return
         }
-        res.status(404).send('Not found')
+        else{
+            res.status(404).send('Not found')
+            return
+        }
     })

@@ -13,6 +13,7 @@ export const authMiddlewareJWT = async (req: Request, res: Response, next: NextF
     if(userId){
         req.user = await usersService.findUserById(userId)
         next()
+        return
     }
     res.send(401)
 }
