@@ -6,7 +6,7 @@ import {bloggersRepository} from "../repositories/bloggers-repository-db";
 
 
 export const usersService= {
-    async createUser(userParam: UserInputModel): Promise<UserViewModel>{
+    async createUser(userParam: UserInputModel): Promise<any/*UserViewModel*/>{
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(userParam.password, passwordSalt)
         const newUser: UserViewModel = {
@@ -21,7 +21,7 @@ export const usersService= {
     },
 
     async getUsers(queryParams?: UserQuery): Promise<PaginationUsers>{
-        return usersRepository.getUsers(queryParams)
+        return await usersRepository.getUsers(queryParams)
     },
 
 async findUserById(id: string): Promise<UserViewModel | null> {

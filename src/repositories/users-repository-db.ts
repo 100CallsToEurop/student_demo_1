@@ -18,7 +18,9 @@ export const usersRepository = {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: count,
-            items: await usersCollection.find(filter, {projection:{ _id: 0 }}).skip(skip).limit(pageSize).toArray()
+            items: await usersCollection.find(filter, {projection:{
+                _id: 0, passwordHash: 0, passwordSalt: 0, createAt: 0
+            }}).skip(skip).limit(pageSize).toArray()
         }
 
         return result
