@@ -4,6 +4,7 @@ import {authMiddleware} from "../middleware/auth-middleware";
 import {CommentInputModel} from "../types/types";
 import {commentValidation} from "../middleware/comment-middleware";
 import {inputValidatorMiddleware} from "../middleware/input-validator-middleware";
+import {authMiddlewareJWT} from "../middleware/auth-middleware-jwt";
 
 export const commentsRouter = Router({})
 
@@ -18,7 +19,7 @@ commentsRouter.get('/', async (req: Request, res: Response) =>{
 })
 
 commentsRouter.put('/',
-    authMiddleware,
+    authMiddlewareJWT,
     commentValidation,
     inputValidatorMiddleware,
     async (req: Request, res: Response) =>{
@@ -32,7 +33,7 @@ commentsRouter.put('/',
     res.status(404).send('NotFound')
 })
 
-commentsRouter.delete('/', authMiddleware, async (req: Request, res: Response) =>{
+commentsRouter.delete('/', authMiddlewareJWT, async (req: Request, res: Response) =>{
     const commentId = req.user!.id
     if (await commentsService.deleteCommentById(commentId)) {
         res.status(204).send('No Content')
