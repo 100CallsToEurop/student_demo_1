@@ -1,9 +1,37 @@
-import {CommentInputModel, CommentViewModel} from "../types/types";
+import {CommentInputModel, CommentQuery, CommentViewModel, PostInputModel, PostViewModel} from "../types/types";
 import {commentsRepository} from "../repositories/comments-repository-db";
+import {PaginationComments} from "../types/pagination.types";
+import {bloggersService} from "./bloggers.service";
 import {postsRepository} from "../repositories/posts-repository-db";
+import {postsService} from "./posts.services";
+import {usersService} from "./users.service";
 
 
 export const commentsService= {
+
+    async createComment(postId: string, createParam: CommentInputModel):Promise<CommentViewModel | null> {
+        const user = await usersService.findUserById(createParam.userId)
+        const posts = await postsService.getPostById(postId)
+        if (!posts) return null
+        const newComment: CommentViewModel = {
+            id: (+(new Date())).toString(),
+            content: createParam.content,
+            userId: createParam.userId,
+            userLogin: user!.login,
+            addedAt: (new Date()).toString()
+        }
+        await commentsRepository.createComments(newComment)
+        return newComment
+    },
+
+    async getComments(queryParams?: CommentQuery): Promise<PaginationComments | null>{
+        if(queryParams?.postId !== undefined) {
+            const posts = await postsService.getPostById(queryParams?.postId)
+            if (!posts) return null
+        }
+        return await commentsRepository.getComments(queryParams)
+    },
+
     async updateCommentById(commentId: string, updateComment: CommentInputModel): Promise<boolean>{
         return await commentsRepository.updateCommentById(commentId, updateComment)
     },

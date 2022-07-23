@@ -39,12 +39,18 @@ export type UserQuery = {
     PageSize?: string
 }
 
+export type CommentQuery = {
+    postId?: string,
+    PageNumber?: string,
+    PageSize?: string
+}
+
 export type CommentInputModel = {
+    userId: string
     content: string
 }
 export type CommentViewModel = CommentInputModel & {
     id:	string
-    userId:	string
     userLogin: string
     addedAt: string
 }

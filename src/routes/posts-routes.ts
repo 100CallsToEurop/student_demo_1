@@ -9,7 +9,10 @@ import {
     shortDescriptionValidation,
     titleValidationPosts
 } from "../middleware/post-middleware";
-import {PostQuery} from "../types/types";
+import {CommentQuery, PostQuery} from "../types/types";
+import {authMiddlewareJWT} from "../middleware/auth-middleware-jwt";
+import {commentValidation} from "../middleware/comment-middleware";
+import {commentsService} from "../domian/comments.service";
 
 export const postsRouter = Router({})
 
@@ -79,3 +82,32 @@ postsRouter.put('/:id',
     }
     res.status(404).send('NotFound')
 })
+
+//for comments
+
+postsRouter.get('/:postId/comments', async (req: Request, res: Response) => {
+    const postId = req.params.postId
+    const {PageNumber, PageSize}: CommentQuery = req.query
+    const comments = await commentsService.getComments({postId, PageNumber, PageSize})
+    res.status(200).json(comments)
+})
+
+postsRouter.post('/:postId/comments',
+    authMiddlewareJWT,
+    commentValidation,
+    inputValidatorMiddleware,
+    async (req: Request, res: Response) => {
+        const postId = req.params.postId
+        const userId = req.user!.id
+        const {content}  = req.body
+        const newComments = await commentsService.createComment(postId,{userId, content})
+        if(newComments === null) {
+            res.status(400).send({errorsMessages: [{message: "Not found", field: "bloggerId"}]})
+            return
+        }
+        if(newComments) {
+            res.status(201).send(newComments)
+            return
+        }
+        res.status(404).send('Not found')
+    })

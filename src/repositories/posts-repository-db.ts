@@ -12,7 +12,7 @@ export const postsRepository = {
         let filter: any = {}
         if(queryParams?.id !== undefined){
             console.log(queryParams.id)
-            filter['bloggerId'] = +queryParams.id
+            filter['bloggerId'] = queryParams.id
             count = (await postsCollection.find(filter).toArray()).length
 
         }
