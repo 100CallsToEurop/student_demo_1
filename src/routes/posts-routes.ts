@@ -105,10 +105,10 @@ postsRouter.post('/:postId/comments',
         const {content}  = req.body
         console.log(req.user!.id)
         const newComments = await commentsService.createComment(req.user!.id, postId,{content})
-        if(newComments === null) {
+        /*if(newComments === null) {
             res.status(400).send({errorsMessages: [{message: "Not found", field: "postId"}]})
             return
-        }
+        }*/
         if(newComments) {
             res.status(201).send(newComments)
             return
