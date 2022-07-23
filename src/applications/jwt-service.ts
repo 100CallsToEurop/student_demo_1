@@ -4,7 +4,9 @@ import jwt from 'jsonwebtoken'
 export const jwtService = {
    async createJWT(user: UserViewModel){
       const token = jwt.sign({userId: user.id}, '123', {expiresIn: '1h'})
-      return token
+      return {
+         token
+      }
    },
    async getUserIdByToken(token: string){
       try{
