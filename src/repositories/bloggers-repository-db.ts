@@ -1,4 +1,4 @@
-import {bloggersCollection, postsCollection} from "./db";
+import {bloggersCollection, commentsCollection, postsCollection} from "./db";
 import {BloggerInputModel, BloggerQuery, BloggerViewModel} from "../types/types";
 import {PaginationBloggers} from "../types/pagination.types";
 
@@ -36,6 +36,7 @@ export const bloggersRepository = {
     async deleteBloggerById(id: string): Promise<boolean> {
         const result = await bloggersCollection.deleteOne({id:id})
         await postsCollection.deleteMany({bloggerId: id})
+        await commentsCollection.deleteMany({userId: id})
         return result.deletedCount === 1
     },
     async updateBloggerById(id: string, updateParam: BloggerInputModel): Promise<boolean> {
