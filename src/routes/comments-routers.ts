@@ -35,6 +35,8 @@ commentsRouter.put('/:commentId',
 
 commentsRouter.delete('/:commentId', authMiddlewareJWT, async (req: Request, res: Response) =>{
     const commentId = req.params.commentId
+    const myComment = await commentsService.checkCommentById(req.user!.id, commentId)
+    if(!myComment) return res.status(403).send(403)
     if (await commentsService.deleteCommentById(commentId)) {
         res.status(204).send('No Content')
         return
