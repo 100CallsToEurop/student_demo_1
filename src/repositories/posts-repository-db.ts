@@ -1,6 +1,7 @@
 import {commentsCollection, postsCollection} from "./db";
-import { PostInputModel, PostQuery, PostViewModel} from "../types/types";
-import {PaginationPosts} from "../types/pagination.types";
+import {PaginationPosts, PostInputModel, PostModel, PostQuery, PostViewModel} from "../types/post.type";
+import {ObjectId} from "mongodb";
+
 
 export const postsRepository = {
     async getPosts(queryParams?: PostQuery): Promise<PaginationPosts> {
@@ -11,42 +12,49 @@ export const postsRepository = {
 
         let filter: any = {}
         if(queryParams?.id !== undefined){
-            console.log(queryParams.id)
             filter['bloggerId'] = queryParams.id
             count = (await postsCollection.find(filter).toArray()).length
-
         }
         else{
             count = await postsCollection.countDocuments()
         }
+        const items = await postsCollection.find(filter).skip(skip).limit(pageSize).toArray()
 
         const result: PaginationPosts= {
             pagesCount: Math.ceil(count/pageSize),
             page: pageNumber,
             pageSize: pageSize,
             totalCount: count,
-            items: await postsCollection.find(filter, {projection:{ _id: 0 }}).skip(skip).limit(pageSize).toArray()
+            items: items.map(item =>{
+                return {
+                    id: item._id.toString(),
+                    title: item.title,
+                    shortDescription: item.shortDescription,
+                    content: item.content,
+                    bloggerId: item.bloggerId,
+                    bloggerName: item.bloggerName
+                }
+            })
         }
 
         return result
     },
-    async getPostById(id: string) {
-        let post = await postsCollection.findOne({id}, {projection: { _id: 0}})
+    async getPostById(_id: ObjectId) {
+        let post = await postsCollection.findOne(_id)
         if(post) return post
         return null
     },
-    async deletePostById(id: string): Promise<boolean> {
-        await commentsCollection.deleteMany({postId: id})
-        const result = await postsCollection.deleteOne({id:id})
+    async deletePostById(_id: ObjectId): Promise<boolean> {
+        await commentsCollection.deleteMany({postId: _id.toString()})
+        const result = await postsCollection.deleteOne(_id)
         return result.deletedCount === 1
     },
-    async updatePostById(id: string, updatePost: PostInputModel): Promise<boolean> {
-        const result = await postsCollection.updateOne({id: id}, {$set: updatePost})
+    async updatePostById(_id: ObjectId, updatePost: PostInputModel): Promise<boolean> {
+        const result = await postsCollection.updateOne(_id, {$set: updatePost})
         return result.matchedCount === 1
     },
-    async createPost(createParam: PostViewModel): Promise<PostViewModel> {
-        const params = {...createParam}
-        await postsCollection.insertOne(params)
+    async createPost(createParam: PostModel): Promise<PostModel> {
+        await postsCollection.insertOne(createParam)
         return createParam
     }
 }

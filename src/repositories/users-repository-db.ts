@@ -1,7 +1,6 @@
-import {UserQuery, UserViewModel} from "../types/types";
 import {usersCollection} from "./db";
-import {PaginationUsers} from "../types/pagination.types";
-
+import {PaginationUsers, UserAccount, UserQuery, UserViewModel} from "../types/user.type";
+import {ObjectId} from "mongodb";
 
 export const usersRepository = {
 
@@ -12,40 +11,60 @@ export const usersRepository = {
         const skip: number = (pageNumber-1) * pageSize
         let count = await usersCollection.countDocuments()
         const filter = {}
+        const items = await usersCollection.find(filter).skip(skip).limit(pageSize).toArray()
 
         const result: PaginationUsers = {
             pagesCount: Math.ceil(count/pageSize),
             page: pageNumber,
             pageSize: pageSize,
             totalCount: count,
-            items: await usersCollection.find(filter, {projection:{
-                _id: 0, passwordHash: 0, passwordSalt: 0, createAt: 0
-            }}).skip(skip).limit(pageSize).toArray()
+            items: items.map(item =>{
+                return{
+                    id: item._id.toString(),
+                    login: item.accountData.userName
+                }
+            })
         }
-
         return result
     },
 
-    async createUser(createParam: UserViewModel): Promise<UserViewModel>{
-        const params = {...createParam}
-        await usersCollection.insertOne(params)
+    async createUser(createParam: UserAccount): Promise<UserAccount>{
+        await usersCollection.insertOne(createParam)
         return createParam
     },
 
-    async findUserById(id: string): Promise<UserViewModel | null>{
-        const user = await usersCollection.findOne({id}, {projection:{ _id: 0 }})
+    async findUserById(_id: ObjectId): Promise<UserAccount | null>{
+        const user = await usersCollection.findOne(_id)
         if(user) return user
         return null
     },
 
-    async findByLogin(login: string): Promise<UserViewModel | null>{
-        const user = await usersCollection.findOne({login}, {projection:{ _id: 0 }})
+    async findByLogin(login: string): Promise<UserAccount | null>{
+        const user = await usersCollection.findOne({"accountData.userName": login})
         if(user) return user
         return null
     },
 
-    async deleteUserById(id: string): Promise<boolean> {
-        const result = await usersCollection.deleteOne({id:id})
+    async findByConfirmCode(emailConfirmationCode: string): Promise<UserAccount | null>{
+        const user = await usersCollection.findOne({
+            $or:
+                [
+                    {"emailConfirmation.confirmationCode": emailConfirmationCode},
+                    {"accountData.email": emailConfirmationCode}
+                ]
+        })
+        if(user) return user
+        return null
+    },
+
+
+    async updateConfirmationCode(_id: ObjectId): Promise<boolean>{
+        const result = await usersCollection.updateOne(_id, {$set: {'emailConfirmation.isConfirmed': true}})
+        return result.modifiedCount === 1
+    },
+
+    async deleteUserById(_id: ObjectId): Promise<boolean> {
+        const result = await usersCollection.deleteOne(_id)
         return result.deletedCount === 1
     },
 }

@@ -11,6 +11,7 @@ import {authRouter} from "./routes/auth-routers";
 import {runDb} from "./repositories/db";
 import {usersRouter} from "./routes/users-routers";
 import {commentsRouter} from "./routes/comments-routers";
+import {testingRouter} from "./routes/testing-routers";
 
 
 //Constant
@@ -26,6 +27,7 @@ app.use('/users', usersRouter)
 app.use('/comments', commentsRouter)
 app.use('/bloggers', bloggersRouter)
 app.use('/posts', postsRouter)
+app.use('/testing', testingRouter)
 
 const startApp = async() =>{
     await runDb()

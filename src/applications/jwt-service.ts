@@ -1,5 +1,6 @@
-import {UserViewModel} from "../types/types";
+
 import jwt from 'jsonwebtoken'
+import {UserViewModel} from "../types/user.type";
 
 export const jwtService = {
    async createJWT(user: UserViewModel){

@@ -1,10 +1,14 @@
 import {bloggersCollection, commentsCollection, postsCollection} from "./db";
-import {BloggerInputModel, BloggerQuery, BloggerViewModel} from "../types/types";
-import {PaginationBloggers} from "../types/pagination.types";
-
+import {
+    BloggerInputModel,
+    BloggerModel,
+    BloggerQuery, BloggerViewModel,
+    PaginationBloggers
+} from "../types/blogger.type";
+import {ObjectId} from "mongodb";
 
 export const bloggersRepository = {
-    async getBloggers(queryParams?: BloggerQuery): Promise<PaginationBloggers/*BloggerViewModel[]*/> {
+    async getBloggers(queryParams?: BloggerQuery): Promise<PaginationBloggers> {
 
         let pageNumber = Number(queryParams?.PageNumber) || 1
         let pageSize = Number(queryParams?.PageSize) || 10
@@ -17,6 +21,7 @@ export const bloggersRepository = {
             count = (await bloggersCollection.find(filter).toArray()).length
         }
 
+        const items = await bloggersCollection.find(filter).skip(skip).limit(pageSize).toArray()
 
 
         const result: PaginationBloggers = {
@@ -24,28 +29,34 @@ export const bloggersRepository = {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: count,
-            items: await bloggersCollection.find(filter, {projection:{ _id: 0 }}).skip(skip).limit(pageSize).toArray()
+            items: items.map(item =>{
+                return{
+                    id: item._id.toString(),
+                    name: item.name,
+                    youtubeUrl: item.youtubeUrl
+                }
+            })
         }
 
         return result
     },
-    async getBloggerById(id: string): Promise<BloggerViewModel | null> {
-       const bloger = await bloggersCollection.findOne({id},{ projection: { _id: 0}})
-       return bloger
+    async getBloggerById(_id: ObjectId): Promise<BloggerModel | null> {
+       const blogger = await bloggersCollection.findOne(_id)
+        return blogger
+
     },
-    async deleteBloggerById(id: string): Promise<boolean> {
-        const result = await bloggersCollection.deleteOne({id:id})
-        await postsCollection.deleteMany({bloggerId: id})
-        await commentsCollection.deleteMany({userId: id})
+    async deleteBloggerById(_id: ObjectId): Promise<boolean> {
+        const result = await bloggersCollection.deleteOne(_id)
+        await postsCollection.deleteMany({bloggerId: _id.toString()})
+        await commentsCollection.deleteMany({userId: _id.toString()})
         return result.deletedCount === 1
     },
-    async updateBloggerById(id: string, updateParam: BloggerInputModel): Promise<boolean> {
-        const result = await bloggersCollection.updateOne({id: id}, { $set: updateParam})
+    async updateBloggerById(_id: ObjectId, updateParam: BloggerInputModel): Promise<boolean> {
+        const result = await bloggersCollection.updateOne(_id, { $set: updateParam})
         return result.matchedCount === 1
     },
-    async createBlogger(createParam: BloggerViewModel): Promise<BloggerViewModel>{
-        const params = {...createParam}
-        await bloggersCollection.insertOne(params)
+    async createBlogger(createParam: BloggerModel): Promise<BloggerModel>{
+        await bloggersCollection.insertOne(createParam)
         return createParam
     }
 }

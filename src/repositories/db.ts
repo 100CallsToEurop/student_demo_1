@@ -1,15 +1,19 @@
 import {MongoClient} from "mongodb";
-import {BloggerViewModel, CommentViewModel, PostViewModel, UserViewModel} from "../types/types"
+import {BloggerModel, BloggerViewModel} from "../types/blogger.type";
+import {PostModel, PostViewModel} from "../types/post.type";
+import {UserAccount, UserViewModel} from "../types/user.type";
+import {CommentModel, CommentViewModel} from "../types/comment.type";
+
 
 
 const uri = `mongodb+srv://user:testDatabase@cluster0.tuuab.mongodb.net/?retryWrites=true&w=majority`;
 
 export const client = new MongoClient(uri)
 const db = client.db("backend")
-export const bloggersCollection = db.collection<BloggerViewModel>("bloggers")
-export const postsCollection = db.collection<PostViewModel>("posts")
-export const usersCollection = db.collection<UserViewModel>("users")
-export const commentsCollection = db.collection<CommentViewModel>("comments")
+export const bloggersCollection = db.collection<BloggerModel>("bloggers")
+export const postsCollection = db.collection<PostModel>("posts")
+export const usersCollection = db.collection<UserAccount>("users")
+export const commentsCollection = db.collection<CommentModel>("comments")
 
 export async function runDb(){
     try{
@@ -22,22 +26,3 @@ export async function runDb(){
         await client.close()
     }
 }
-
-
-
-
-export const bloggers = [
-    {id: 1, name: 'About JS - 01', youtubeUrl: 'https://aaa@yandex.ru'},
-    {id: 2, name: 'About JS - 02', youtubeUrl: 'https://aaa@yandex.ru'},
-    {id: 3, name: 'About JS - 03', youtubeUrl: 'https://aaa@yandex.ru'},
-    {id: 4, name: 'About JS - 04', youtubeUrl: 'https://aaa@yandex.ru'},
-    {id: 5, name: 'About JS - 05', youtubeUrl: 'https://aaa@yandex.ru'}
-]
-
-export const posts = [
-    {id: 1, title: 'About JS - 01', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 1, bloggerName: 'it-incubator.eu'},
-    {id: 2, title: 'About JS - 02', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 2, bloggerName: 'it-incubator.eu'},
-    {id: 3, title: 'About JS - 03', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 3, bloggerName: 'it-incubator.eu'},
-    {id: 4, title: 'About JS - 04', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 4, bloggerName: 'it-incubator.eu'},
-    {id: 5, title: 'About JS - 05', shortDescription: 'it-incubator.eu', content: 'it-incubator.eu', bloggerId: 5, bloggerName: 'it-incubator.eu'},
-]

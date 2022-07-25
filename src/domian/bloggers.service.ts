@@ -1,29 +1,44 @@
 
-import {BloggerInputModel, BloggerQuery, BloggerViewModel} from "../types/types";
+
 import {bloggersRepository} from "../repositories/bloggers-repository-db";
-import {PaginationBloggers} from "../types/pagination.types";
+import {
+    BloggerInputModel,
+    BloggerModel,
+    BloggerQuery,
+    BloggerViewModel,
+    PaginationBloggers
+} from "../types/blogger.type";
+import {ObjectId} from "mongodb";
 
 export const bloggersService= {
     async getBloggers(queryParams?: BloggerQuery): Promise<PaginationBloggers> {
         return bloggersRepository.getBloggers(queryParams)
     },
-    async getBloggerById(id: string): Promise<BloggerViewModel | null> {
+    async getBloggerById(id: ObjectId): Promise<BloggerViewModel | null> {
         const blogger = await bloggersRepository.getBloggerById(id)
-        return blogger
+        if(!blogger) return null
+        return {
+            id: blogger._id.toString(),
+            name: blogger.name,
+            youtubeUrl: blogger.youtubeUrl
+        }
     },
-    async deleteBloggerById(id: string): Promise<boolean> {
+    async deleteBloggerById(id: ObjectId): Promise<boolean> {
         return await bloggersRepository.deleteBloggerById(id)
     },
-    async updateBloggerById(id: string, updateParam: BloggerInputModel): Promise<boolean> {
+    async updateBloggerById(id: ObjectId, updateParam: BloggerInputModel): Promise<boolean> {
         return await bloggersRepository.updateBloggerById(id, updateParam)
-
     },
     async createBlogger(createParam: BloggerInputModel): Promise<BloggerViewModel>{
-        const newBlogger: BloggerViewModel = {
+        const newBlogger: BloggerModel = {
             ...createParam,
-            id: (+(new Date())).toString(),
+            _id: new ObjectId()
         }
         await bloggersRepository.createBlogger(newBlogger)
-        return newBlogger
+        return {
+            id: newBlogger._id.toString(),
+            name: newBlogger.name,
+            youtubeUrl: newBlogger.youtubeUrl
+        }
     }
 }

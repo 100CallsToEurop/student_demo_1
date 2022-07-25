@@ -1,15 +1,15 @@
 import {Request, Response, Router} from "express";
 import {commentsService} from "../domian/comments.service";
-import {authMiddleware} from "../middleware/auth-middleware";
-import {CommentInputModel} from "../types/types";
 import {commentValidation} from "../middleware/comment-middleware";
 import {inputValidatorMiddleware} from "../middleware/input-validator-middleware";
 import {authMiddlewareJWT} from "../middleware/auth-middleware-jwt";
+import {CommentInputModel} from "../types/comment.type";
+import {ObjectId} from "mongodb";
 
 export const commentsRouter = Router({})
 
 commentsRouter.get('/:id', async (req: Request, res: Response) =>{
-    const id = req.params.id
+    const id = new ObjectId(req.params.id)
     const comment = await commentsService.getCommentById(id)
     if (comment) {
         res.status(200).json(comment)
@@ -23,9 +23,9 @@ commentsRouter.put('/:commentId',
     commentValidation,
     inputValidatorMiddleware,
     async (req: Request, res: Response) =>{
-    const id = req.params.commentId
+    const id = new ObjectId(req.params.commentId)
     const {content}: CommentInputModel = req.body
-        const myComment = await commentsService.checkCommentById(req.user!.id, id)
+        const myComment = await commentsService.checkCommentById(new ObjectId(req.user!.id), id)
         if(myComment === null) {
             res.status(404).send('Not found')
             return
@@ -43,8 +43,8 @@ commentsRouter.put('/:commentId',
 })
 
 commentsRouter.delete('/:commentId', authMiddlewareJWT, async (req: Request, res: Response) =>{
-    const commentId = req.params.commentId
-    const myComment = await commentsService.checkCommentById(req.user!.id, commentId)
+    const commentId = new ObjectId(req.params.commentId)
+    const myComment = await commentsService.checkCommentById(new ObjectId(req.user!.id), commentId)
     if(myComment === null) {
         res.status(404).send('Not found')
         return

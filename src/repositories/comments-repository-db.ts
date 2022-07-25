@@ -1,8 +1,13 @@
-import {CommentInputModel, CommentQuery, CommentViewModel, PostInputModel, PostViewModel} from "../types/types";
-import {commentsCollection, postsCollection} from "./db";
-import {PaginationComments} from "../types/pagination.types";
-import {usersService} from "../domian/users.service";
-import {postsService} from "../domian/posts.services";
+
+import {commentsCollection} from "./db";
+import {
+    CommentInputModel,
+    CommentModel,
+    CommentQuery,
+    PaginationComments
+} from "../types/comment.type";
+import {ObjectId} from "mongodb";
+
 
 export const commentsRepository = {
 
@@ -20,37 +25,43 @@ export const commentsRepository = {
         else{
             count = await commentsCollection.countDocuments()
         }
-
+        const items = await commentsCollection.find(filter).skip(skip).limit(pageSize).toArray()
         const result: PaginationComments= {
             pagesCount: Math.ceil(count/pageSize),
             page: pageNumber,
             pageSize: pageSize,
             totalCount: count,
-            items: await commentsCollection.find(filter, {projection:{ _id: 0, postId: 0}}).skip(skip).limit(pageSize).toArray()
+            items: items.map(item =>{
+                return{
+                    id: item._id.toString(),
+                    content: item.content,
+                    userId: item.userId,
+                    userLogin: item.userLogin,
+                    addedAt: item.addedAt
+                }
+            })
         }
-
         return result
     },
 
-    async createComments(createParam: CommentViewModel){
-        const params = {...createParam}
-        await commentsCollection.insertOne(params)
+    async createComments(createParam: CommentModel){
+        await commentsCollection.insertOne(createParam)
         return createParam
     },
 
-    async updateCommentById(id: string, updateComment: CommentInputModel): Promise<boolean>{
-        const result = await commentsCollection.updateOne({id: id}, {$set: updateComment})
+    async updateCommentById(_id: ObjectId, updateComment: CommentInputModel): Promise<boolean>{
+        const result = await commentsCollection.updateOne(_id, {$set: updateComment})
         return result.matchedCount === 1
     },
 
-    async getCommentById(id: string): Promise<CommentViewModel | null>{
-        const comment = await commentsCollection.findOne({id}, {projection:{ _id: 0, postId: 0 }})
+    async getCommentById(_id: ObjectId): Promise<CommentModel | null>{
+        const comment = await commentsCollection.findOne(_id)
         if(comment) return comment
         return null
     },
 
-    async deleteCommentById(id: string): Promise<boolean> {
-        const result = await commentsCollection.deleteOne({id:id})
+    async deleteCommentById(_id: ObjectId): Promise<boolean> {
+        const result = await commentsCollection.deleteOne(_id)
         return result.deletedCount === 1
     },
 }

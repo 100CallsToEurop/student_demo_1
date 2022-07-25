@@ -9,10 +9,12 @@ import {
     shortDescriptionValidation,
     titleValidationPosts
 } from "../middleware/post-middleware";
-import {CommentQuery, PostQuery} from "../types/types";
 import {authMiddlewareJWT} from "../middleware/auth-middleware-jwt";
 import {commentValidation} from "../middleware/comment-middleware";
 import {commentsService} from "../domian/comments.service";
+import {PostQuery} from "../types/post.type";
+import {CommentQuery} from "../types/comment.type";
+import {ObjectId} from "mongodb";
 
 export const postsRouter = Router({})
 
@@ -22,7 +24,7 @@ postsRouter.get('/', async (req: Request, res: Response) => {
     res.status(200).json(posts)
 })
 postsRouter.get('/:id', async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const id = new ObjectId(req.params.id);
     const post = await postsService.getPostById(id)
     if(post) {
         res.status(200).send(post)
@@ -32,7 +34,7 @@ postsRouter.get('/:id', async (req: Request, res: Response) => {
 
 })
 postsRouter.delete('/:id', authMiddleware, async (req: Request, res: Response)=>{
-    const id = req.params.id
+    const id = new ObjectId(req.params.id)
     if (await postsService.deletePostById(id)) {
         res.status(204).send('No Content')
         return
@@ -68,7 +70,7 @@ postsRouter.put('/:id',
     bloggerIdValidation,
     inputValidatorMiddleware,
     async (req: Request, res: Response)=>{
-    const id = req.params.id
+    const id = new ObjectId(req.params.id)
     const {title, shortDescription, content, bloggerId }  = req.body
     const isUpdate = await postsService.updatePostById(id, {title, shortDescription, content, bloggerId })
         if(isUpdate === null) {
@@ -86,7 +88,7 @@ postsRouter.put('/:id',
 //for comments
 
 postsRouter.get('/:postId/comments', async (req: Request, res: Response) => {
-    const postId = req.params.postId
+    const postId = new ObjectId(req.params.postId)
     const {PageNumber, PageSize}: CommentQuery = req.query
     const comments = await commentsService.getComments({postId, PageNumber, PageSize})
     if (comments) {
@@ -101,9 +103,9 @@ postsRouter.post('/:postId/comments',
     commentValidation,
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
-        const postId = req.params.postId
+        const postId = new ObjectId(req.params.postId)
         const {content}  = req.body
-        const newComments = await commentsService.createComment(req.user!.id, postId,{content})
+        const newComments = await commentsService.createComment(new ObjectId(req.user!.id), postId,{content})
         if(newComments) {
             res.status(201).send(newComments)
             return

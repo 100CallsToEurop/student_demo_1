@@ -1,4 +1,5 @@
-import {UserViewModel} from "./types";
+import {UserViewModel} from "./user.type";
+
 
 declare global {
     namespace Express {
