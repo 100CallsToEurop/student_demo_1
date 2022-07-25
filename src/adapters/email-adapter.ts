@@ -3,7 +3,9 @@ import nodemailer from "nodemailer";
 export const emailAdapter = {
     async sendEmail(email: string, subject: string, text: string){
         let transporter = nodemailer.createTransport({
-            service: "Mail.ru",
+            host: "smtp.mail.ru",
+            port: 465,
+            secure: true,
             auth: {
                 user: "petiryakov@teh.expert",
                 pass: "m{mbs60OGoIK@smtp.mail.ru",
