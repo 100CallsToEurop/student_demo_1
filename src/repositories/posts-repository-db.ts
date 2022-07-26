@@ -40,17 +40,17 @@ export const postsRepository = {
         return result
     },
     async getPostById(_id: ObjectId) {
-        let post = await postsCollection.findOne(_id)
+        let post = await postsCollection.findOne({_id})
         if(post) return post
         return null
     },
     async deletePostById(_id: ObjectId): Promise<boolean> {
         await commentsCollection.deleteMany({postId: _id.toString()})
-        const result = await postsCollection.deleteOne(_id)
+        const result = await postsCollection.deleteOne({_id})
         return result.deletedCount === 1
     },
     async updatePostById(_id: ObjectId, updatePost: PostInputModel): Promise<boolean> {
-        const result = await postsCollection.updateOne(_id, {$set: updatePost})
+        const result = await postsCollection.updateOne({_id}, {$set: updatePost})
         return result.matchedCount === 1
     },
     async createPost(createParam: PostModel): Promise<PostModel> {

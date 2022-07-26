@@ -34,7 +34,7 @@ export const usersRepository = {
     },
 
     async findUserById(_id: ObjectId): Promise<UserAccount | null>{
-        const user = await usersCollection.findOne(_id)
+        const user = await usersCollection.findOne({_id})
         if(user) return user
         return null
     },
@@ -59,12 +59,12 @@ export const usersRepository = {
 
 
     async updateConfirmationCode(_id: ObjectId): Promise<boolean>{
-        const result = await usersCollection.updateOne(_id, {$set: {'emailConfirmation.isConfirmed': true}})
+        const result = await usersCollection.updateOne({_id}, {$set: {'emailConfirmation.isConfirmed': true}})
         return result.modifiedCount === 1
     },
 
     async deleteUserById(_id: ObjectId): Promise<boolean> {
-        const result = await usersCollection.deleteOne(_id)
+        const result = await usersCollection.deleteOne({_id})
         return result.deletedCount === 1
     },
 }

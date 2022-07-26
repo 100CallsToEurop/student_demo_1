@@ -41,7 +41,7 @@ export const bloggersRepository = {
         return result
     },
     async getBloggerById(_id: ObjectId): Promise<BloggerModel | null> {
-       const blogger = await bloggersCollection.findOne(_id)
+       const blogger = await bloggersCollection.findOne({_id})
         return blogger
 
     },
@@ -52,7 +52,7 @@ export const bloggersRepository = {
         return result.deletedCount === 1
     },
     async updateBloggerById(_id: ObjectId, updateParam: BloggerInputModel): Promise<boolean> {
-        const result = await bloggersCollection.updateOne(_id, { $set: updateParam})
+        const result = await bloggersCollection.updateOne({_id}, { $set: updateParam})
         return result.matchedCount === 1
     },
     async createBlogger(createParam: BloggerModel): Promise<BloggerModel>{
