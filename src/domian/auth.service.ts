@@ -1,4 +1,3 @@
-import {RegistrationConfirmationCodeModel, RegistrationEmailResending} from "../types/registration.type";
 import {usersRepository} from "../repositories/users-repository-db";
 import {UserAccount} from "../types/user.type";
 

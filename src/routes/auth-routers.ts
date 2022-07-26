@@ -6,7 +6,6 @@ import {RegistrationConfirmationCodeModel, RegistrationEmailResending} from "../
 import {emailValidationRegistration, loginValidation, passwordValidation} from "../middleware/registration-middleware";
 import {UserInputModel} from "../types/user.type";
 import {authService} from "../domian/auth.service";
-import {emailValidationEmail} from "../middleware/user-middleware";
 import {checkLimitReq} from "../middleware/checkLimitRequest-middleware";
 import {inputValidatorMiddleware} from "../middleware/input-validator-middleware";
 
@@ -52,7 +51,7 @@ authRouter.post('/registration',
     })
 
 authRouter.post('/registration-email-resending',
-    emailValidationEmail,
+    emailValidationRegistration,
     inputValidatorMiddleware,
     checkLimitReq,
     async (req: Request, res: Response) => {
