@@ -12,7 +12,7 @@ export const checkLimitReq = async(req: Request, res: Response, next: NextFuncti
 
     requests.push({ip, createAt: currentData})
 
-    const limits = requests.filter(el => el.ip === ip && el.createAt >= formDate)
+    const limits = requests.filter(el => el.ip === ip && el.createAt > formDate)
     if(limits.length > maxLimit){
         console.log(limits.length)
         res.status(429).send(429)

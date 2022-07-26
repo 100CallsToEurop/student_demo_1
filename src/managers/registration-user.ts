@@ -4,8 +4,12 @@ import {emailAdapter} from "../adapters/email-adapter";
 
 export const emailManager = {
     async sendEmailConfirmationMessage(registrationParams: UserAccount){
-        const link = `https://some-front.com/confirm-registration?code=${registrationParams.emailConfirmation.confirmationCode}`
-        await emailAdapter.sendEmail(registrationParams.accountData.email, "registration user", link)
+        const link = `<a href="https://some-front.com/confirm-registration?code=${registrationParams.emailConfirmation.confirmationCode}">`
+        await emailAdapter.sendEmail(
+            registrationParams.accountData.email,
+            "registration user",
+            "go link",
+            link)
     }
 }
 
