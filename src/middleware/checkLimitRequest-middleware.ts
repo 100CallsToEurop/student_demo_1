@@ -9,14 +9,13 @@ export const checkLimitReq = async(req: Request, res: Response, next: NextFuncti
     const maxLimit = 5
     const currentData = new Date()
     const formDate = addMilliseconds(currentData, -INTERVAL)
-
-    requests.push({ip, createAt: currentData})
-
     const limits = requests.filter(el => el.ip === ip && el.createAt > formDate)
+
     if(limits.length > maxLimit){
         console.log(limits.length)
         res.status(429).send(429)
         return
     }
+    requests.push({ip, createAt: currentData})
     next()
 }
