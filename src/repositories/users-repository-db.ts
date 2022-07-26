@@ -45,6 +45,18 @@ export const usersRepository = {
         return null
     },
 
+    async checkUserEmailOrLogin(LoginOrEmail: string): Promise<UserAccount | null>{
+        const user = await usersCollection.findOne({
+            $or:
+                [
+                    {"accountData.userName": LoginOrEmail},
+                    {"accountData.email": LoginOrEmail}
+                ]
+        })
+        if(user) return user
+        return null
+    },
+
     async findByConfirmCode(emailConfirmationCode: string): Promise<UserAccount | null>{
         const user = await usersCollection.findOne({
             $or:
