@@ -11,7 +11,6 @@ import {LoginInputModel} from "../types/login.type";
 
 export const usersService= {
     async createUser(userParam: UserInputModel): Promise<UserViewModel | null>{
-        if(await usersRepository.checkUserEmailOrLogin(userParam.email) || await usersRepository.checkUserEmailOrLogin(userParam.login)) return null
         const passwordHash = await this._generateHash(userParam.password)
         const newUser: UserAccount = {
             _id: new ObjectId(),
