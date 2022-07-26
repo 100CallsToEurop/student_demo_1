@@ -3,10 +3,10 @@ import {usersService} from "../domian/users.service";
 import {jwtService} from "../applications/jwt-service";
 import {LoginInputModel} from "../types/login.type";
 import {RegistrationConfirmationCodeModel, RegistrationEmailResending} from "../types/registration.type";
-import {emailValidationRegistration} from "../middleware/registration-middleware";
+import {emailValidationRegistration, loginValidation, passwordValidation} from "../middleware/registration-middleware";
 import {UserInputModel} from "../types/user.type";
 import {authService} from "../domian/auth.service";
-import {loginValidation, passwordValidation} from "../middleware/user-middleware";
+import {emailValidationEmail} from "../middleware/user-middleware";
 import {checkLimitReq} from "../middleware/checkLimitRequest-middleware";
 import {inputValidatorMiddleware} from "../middleware/input-validator-middleware";
 
@@ -52,7 +52,7 @@ authRouter.post('/registration',
     })
 
 authRouter.post('/registration-email-resending',
-    emailValidationRegistration,
+    emailValidationEmail,
     inputValidatorMiddleware,
     checkLimitReq,
     async (req: Request, res: Response) => {
