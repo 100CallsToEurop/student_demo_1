@@ -1,6 +1,11 @@
 import {body} from "express-validator";
 import {usersRepository} from "../repositories/users-repository-db";
 
+export const confirmValidation = body('code')
+    .exists()
+    .notEmpty()
+    .isString()
+
 export const loginValidation = body('login')
     .exists()
     .notEmpty()

@@ -3,7 +3,12 @@ import {usersService} from "../domian/users.service";
 import {jwtService} from "../applications/jwt-service";
 import {LoginInputModel} from "../types/login.type";
 import {RegistrationConfirmationCodeModel, RegistrationEmailResending} from "../types/registration.type";
-import {emailValidationRegistration, loginValidation, passwordValidation} from "../middleware/registration-middleware";
+import {
+    confirmValidation,
+    emailValidationRegistration,
+    loginValidation,
+    passwordValidation
+} from "../middleware/registration-middleware";
 import {UserInputModel} from "../types/user.type";
 import {authService} from "../domian/auth.service";
 import {checkLimitReq} from "../middleware/checkLimitRequest-middleware";
@@ -23,7 +28,10 @@ authRouter.post('/login', checkLimitReq,
         res.status(401).send('Unauthorized')
     })
 
-authRouter.post('/registration-confirmation', checkLimitReq,
+authRouter.post('/registration-confirmation',
+    checkLimitReq,
+    confirmValidation,
+    inputValidatorMiddleware,
     async (req: Request, res: Response) => {
         const {code}: RegistrationConfirmationCodeModel = req.body
         const result = await authService.findUserForConfirm(code)
