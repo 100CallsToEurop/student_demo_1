@@ -8,6 +8,7 @@ import {UserInputModel} from "../types/user.type";
 import {authService} from "../domian/auth.service";
 import {loginValidation, passwordValidation} from "../middleware/user-middleware";
 import {checkLimitReq} from "../middleware/checkLimitRequest-middleware";
+import {inputValidatorMiddleware} from "../middleware/input-validator-middleware";
 
 export const authRouter = Router({})
 
@@ -39,6 +40,7 @@ authRouter.post('/registration',
     loginValidation,
     emailValidationRegistration,
     passwordValidation,
+    inputValidatorMiddleware,
     async (req: Request, res: Response) => {
        const {login, email, password}: UserInputModel = req.body
        const user = await usersService.createUser({login, email, password})
@@ -52,6 +54,7 @@ authRouter.post('/registration',
 authRouter.post('/registration-email-resending',
     checkLimitReq,
     emailValidationRegistration,
+    inputValidatorMiddleware,
     async (req: Request, res: Response) => {
         const {email}: RegistrationEmailResending = req.body
         const result = await authService.findUserForConfirm(email)
