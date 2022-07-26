@@ -1,5 +1,4 @@
-import {body, CustomValidator} from "express-validator";
-import {usersRepository} from "../repositories/users-repository-db";
+import {body} from "express-validator";
 
 
 export const emailValidationEmail = body('email')
