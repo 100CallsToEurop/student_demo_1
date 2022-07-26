@@ -48,7 +48,7 @@ authRouter.post('/registration',
             res.status(204).send(204)
             return
         }
-        res.status(400).send({ errorsMessages: [{ message: "email or login already exist", field: "email" }] })
+        res.status(400).send('Bad request')
     })
 
 authRouter.post('/registration-email-resending',
@@ -63,7 +63,7 @@ authRouter.post('/registration-email-resending',
             return
         }
         else{
-            res.status(400).send({ errorsMessages: [{ message: "email or login already exist", field: "email" }]})
+            res.status(400).send('Bad request')
             return
         }
 
