@@ -8,7 +8,7 @@ export const checkLimitReq = async(req: Request, res: Response, next: NextFuncti
 
     const limits = arr.filter(h => h.ip === ip && h.url === url && h.date > Date.now() - 10 * 1000)
 
-    if(limits.length >= 10){
+    if(limits.length > 4){
         res.status(429).send(limits)
         return
     }
@@ -21,6 +21,6 @@ export const checkLimitReq = async(req: Request, res: Response, next: NextFuncti
             url
         }
     ]
-
+    res.status(200).send(200)
     next()
 }
