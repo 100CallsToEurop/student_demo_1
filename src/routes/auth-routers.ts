@@ -15,8 +15,9 @@ import {checkLimitReq} from "../middleware/checkLimitRequest-middleware";
 import {inputValidatorMiddleware} from "../middleware/input-validator-middleware";
 
 export const authRouter = Router({})
+authRouter.use(checkLimitReq)
 
-authRouter.post('/login', checkLimitReq,
+authRouter.post('/login',
     async (req: Request, res: Response) => {
         const {login, password}: LoginInputModel = req.body
         const user = await usersService.checkCredentials({login, password})
@@ -29,7 +30,6 @@ authRouter.post('/login', checkLimitReq,
     })
 
 authRouter.post('/registration-confirmation',
-    checkLimitReq,
     confirmValidation,
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
@@ -43,7 +43,6 @@ authRouter.post('/registration-confirmation',
     })
 
 authRouter.post('/registration',
-    checkLimitReq,
     loginValidation,
     emailValidationRegistration,
     passwordValidation,
@@ -55,11 +54,10 @@ authRouter.post('/registration',
             res.status(204).send(204)
             return
         }
-        res.status(400).send('Bad request')
+        res.status(400).send({errorsMessages: [{ message: "invalid code", field: "code" }]})
     })
 
 authRouter.post('/registration-email-resending',
-    checkLimitReq,
     emailValidationRegistration,
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {

@@ -8,10 +8,7 @@ export const checkLimitReq = async(req: Request, res: Response, next: NextFuncti
 
     const limits = arr.filter(h => h.ip === ip && h.url === url && h.date > Date.now() - 10 * 1000)
 
-    console.log()
-
     if(limits.length > 4){
-        console.log(limits.length)
         res.status(429).send(limits)
         return
     }
