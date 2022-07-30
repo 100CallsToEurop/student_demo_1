@@ -70,7 +70,7 @@ authRouter.post('/registration-email-resending',
             return
         }
         else{
-            res.status(400).send('Bad request')
+            res.status(400).send({errorsMessages: [{ message: "Bad email", field: "email" }]})
             return
         }
 
