@@ -39,7 +39,7 @@ authRouter.post('/registration-confirmation',
             res.status(204).send('Email was verified. Account was activated')
             return
         }
-        res.status(400).send(400)
+        res.status(400).send({errorsMessages: [{ message: "invalid code", field: "code" }]})
     })
 
 authRouter.post('/registration',
@@ -54,7 +54,7 @@ authRouter.post('/registration',
             res.status(204).send(204)
             return
         }
-        res.status(400).send({errorsMessages: [{ message: "invalid code", field: "code" }]})
+        res.status(400).send('Bad request')
     })
 
 authRouter.post('/registration-email-resending',
