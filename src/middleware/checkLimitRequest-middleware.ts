@@ -1,22 +1,29 @@
 import {Request, Response, NextFunction} from "express";
-import {addMilliseconds} from "date-fns";
 
-const requests: Array<{ip: any, createAt: Date}> = []
+let arr: Array<{ip: string, url: string, date: number}> = []
 
 export const checkLimitReq = async(req: Request, res: Response, next: NextFunction) => {
-    const ip = req.socket.remoteAddress
-    const INTERVAL = 10000
-    const maxLimit = 5
-    const currentData = new Date()
-    const formDate = addMilliseconds(currentData, -INTERVAL)
-    requests.push({ip, createAt: currentData})
-    const limits = requests.filter(el => el.ip === ip && el.createAt >= formDate)
+    const ip = req.ip + '[' + req.headers['x-forwarded-for']+ ']'
+    const url = '[' + req.method + ']' + req.originalUrl
 
-    if(limits.length > maxLimit){
+    const limits = arr.filter(h => h.ip === ip && h.url === url && h.date > Date.now() - 10 * 1000)
+
+    console.log()
+
+    if(limits.length > 4){
         console.log(limits.length)
-        res.status(429).send(429)
+        res.status(429).send(limits)
         return
     }
+
+    arr = [
+        ...arr.filter(h => h.date > Date.now() - 10 * 1000),
+        {
+            date: Date.now(),
+            ip,
+            url
+        }
+    ]
 
     next()
 }
