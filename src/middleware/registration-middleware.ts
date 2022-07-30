@@ -5,6 +5,13 @@ export const confirmValidation = body('code')
     .exists()
     .notEmpty()
     .isString()
+    .custom(value => {
+        return  usersRepository.findByConfirmCode(value).then(user => {
+            if (user!.emailConfirmation.isConfirmed) {
+                return Promise.reject('This code already confirmed');
+            }
+        });
+    })
 
 export const loginValidation = body('login')
     .exists()

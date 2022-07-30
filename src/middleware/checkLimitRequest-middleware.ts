@@ -21,6 +21,5 @@ export const checkLimitReq = async(req: Request, res: Response, next: NextFuncti
             url
         }
     ]
-    res.status(200).send(200)
     next()
 }
