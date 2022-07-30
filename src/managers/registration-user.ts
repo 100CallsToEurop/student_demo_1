@@ -8,7 +8,7 @@ export const emailManager = {
         await emailAdapter.sendEmail(
             registrationParams.accountData.email,
             "Configuration of registration",
-            "Follow the lonk to confirm your registration",
+            "Follow the link to confirm your registration",
             link)
     }
 }

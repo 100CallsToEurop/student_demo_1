@@ -10,7 +10,7 @@ export const checkLimitReq = async(req: Request, res: Response, next: NextFuncti
     const currentData = new Date()
     const formDate = addMilliseconds(currentData, -INTERVAL)
     requests.push({ip, createAt: currentData})
-    const limits = requests.filter(el => el.ip === ip && el.createAt > formDate)
+    const limits = requests.filter(el => el.ip === ip && el.createAt >= formDate)
 
     if(limits.length > maxLimit){
         console.log(limits.length)
