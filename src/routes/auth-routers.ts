@@ -58,8 +58,8 @@ authRouter.post('/registration',
     })
 
 authRouter.post('/registration-email-resending',
-    emailValidationRegistration,
-    inputValidatorMiddleware,
+   // emailValidationRegistration,
+    //inputValidatorMiddleware,
     async (req: Request, res: Response) => {
         const {email}: RegistrationEmailResending = req.body
         const result = await authService.findUserForConfirm(email)
