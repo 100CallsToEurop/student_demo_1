@@ -8,6 +8,12 @@ export const authService = {
         return await this.confirmEmail(user, user.emailConfirmation.confirmationCode)
     },
 
+    async findUserByEmail(email: string){
+        const user = await usersRepository.findUserByEmail(email)
+        if(!user) return false
+        return await this.confirmEmail(user, user.emailConfirmation.confirmationCode)
+    },
+
    async confirmEmail(user:UserAccount, code: string){
 
        if(user.emailConfirmation.confirmationCode) return false

@@ -35,6 +35,7 @@ authRouter.post('/registration-confirmation',
     async (req: Request, res: Response) => {
         const {code}: RegistrationConfirmationCodeModel = req.body
         const result = await authService.findUserForConfirm(code)
+        console.log(result)
         if(result) {
             res.status(204).send('Email was verified. Account was activated')
             return
@@ -62,7 +63,7 @@ authRouter.post('/registration-email-resending',
     //inputValidatorMiddleware,
     async (req: Request, res: Response) => {
         const {email}: RegistrationEmailResending = req.body
-        const result = await authService.findUserForConfirm(email)
+        const result = await authService.findUserByEmail(email)
         if(result){
             res.status(204).send(204)
             return
