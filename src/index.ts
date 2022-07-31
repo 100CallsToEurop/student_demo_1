@@ -21,6 +21,7 @@ const app = express()
 
 app.use(cors())
 app.use(jsonMiddleware)
+app.set('trust proxy', true);
 
 app.use('/auth', authRouter)
 app.use('/users', usersRouter)
