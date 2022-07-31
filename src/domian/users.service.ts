@@ -34,7 +34,7 @@ export const usersService= {
             await emailManager.sendEmailConfirmationMessage(newUser)
         }catch(err){
             console.log(err)
-            await usersRepository.deleteUserById(newUser._id)
+            //await usersRepository.deleteUserById(newUser._id)
             return null
         }
         return {

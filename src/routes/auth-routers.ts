@@ -38,7 +38,7 @@ authRouter.post('/registration-confirmation', checkLimitReq,
             res.status(204).send('Email was verified. Account was activated')
             return
         }
-        res.status(400).send({errorsMessages: [{ message: "invalid code", field: "code" }]})
+        res.status(400).send({errorsMessages: [{ message: "This code already confirmed", field: "code" }]})
     })
 
 authRouter.post('/registration',
