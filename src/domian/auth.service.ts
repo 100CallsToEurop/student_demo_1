@@ -1,6 +1,7 @@
 import {usersRepository} from "../repositories/users-repository-db";
 import {UserAccount} from "../types/user.type";
 import {emailManager} from "../managers/registration-user";
+import {v4 as uuidv4} from "uuid";
 
 export const authService = {
     async findUserForConfirm(code: string){
@@ -12,6 +13,7 @@ export const authService = {
     async findUserByEmail(email: string){
         const user = await usersRepository.findUserByEmail(email)
         if(!user) return false
+        user.emailConfirmation.confirmationCode = uuidv4()
         try{
             await emailManager.sendEmailConfirmationMessage(user)
         }catch(err){
