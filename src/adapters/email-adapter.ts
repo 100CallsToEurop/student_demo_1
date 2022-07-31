@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 
 export const emailAdapter = {
-    async sendEmail(email: string, subject: string, text: string, html?: string){
+    async sendEmail(email: string, subject: string, text: string, html: string){
         let transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -15,7 +15,7 @@ export const emailAdapter = {
             to: email,
             subject,
             text,
-            //html: html
+            html: html
         })
     }
 }
