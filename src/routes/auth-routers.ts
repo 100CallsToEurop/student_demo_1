@@ -5,7 +5,7 @@ import {LoginInputModel} from "../types/login.type";
 import {RegistrationConfirmationCodeModel, RegistrationEmailResending} from "../types/registration.type";
 import {
     confirmValidation,
-    emailValidationRegistration,
+    emailValidationRegistration, emailValidationResending,
     loginValidation,
     passwordValidation
 } from "../middleware/registration-middleware";
@@ -60,7 +60,7 @@ authRouter.post('/registration',
 
 authRouter.post('/registration-email-resending',
     checkLimitReq,
-   // emailValidationRegistration,
+    emailValidationResending,
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
         const {email}: RegistrationEmailResending = req.body

@@ -38,6 +38,11 @@ export const emailValidationRegistration = body('email')
         });
     })
 
+export const emailValidationResending = body('email')
+    .exists()
+    .notEmpty()
+    .isEmail()
+
 export const passwordValidation = body('password')
     .exists()
     .notEmpty()
