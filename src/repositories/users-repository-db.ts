@@ -63,14 +63,8 @@ export const usersRepository = {
         return null
     },
 
-    async findByConfirmCode(emailConfirmationCode: string): Promise<UserAccount | null>{
-        const user = await usersCollection.findOne({
-            $or:
-                [
-                    {"emailConfirmation.confirmationCode": emailConfirmationCode},
-                    {"accountData.email": emailConfirmationCode}
-                ]
-        })
+    async findByConfirmCode(code: string): Promise<UserAccount | null>{
+        const user = await usersCollection.findOne({"emailConfirmation.confirmationCode": code} )
         if(user) return user
         return null
     },
