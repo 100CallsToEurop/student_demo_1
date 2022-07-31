@@ -10,6 +10,15 @@ export const authService = {
         return await this.confirmEmail(user, code)
     },
 
+    async confirmEmail(user:UserAccount, code: string){
+        if(user.emailConfirmation.isConfirmed) return false
+        if(user.emailConfirmation.confirmationCode !== code) return false
+        if(user.emailConfirmation.expirationDate < new Date()) return false
+
+        const result = await usersRepository.updateConfirmationCode(user._id)
+        return result
+    },
+
     async findUserByEmail(email: string){
         const user = await usersRepository.findUserByEmail(email)
         if(!user) return false
@@ -29,14 +38,7 @@ export const authService = {
 
     },
 
-   async confirmEmail(user:UserAccount, code: string){
-       if(user.emailConfirmation.isConfirmed) return false
-       if(user.emailConfirmation.confirmationCode !== code) return false
-       if(user.emailConfirmation.expirationDate < new Date()) return false
 
-       const result = await usersRepository.updateConfirmationCode(user._id)
-       return result
-   },
 
 
 
