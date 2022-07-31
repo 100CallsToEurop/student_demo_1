@@ -9,13 +9,13 @@ export const emailAdapter = {
                 pass: "xhjlvrdmplxzkndo",
             }
         })
-
+        console.log(html)
         let info = await transporter.sendMail({
             from: 'Vladimir <petiryakov@teh.expert>',
             to: email,
             subject,
             text,
-            html
+            html: html
         })
     }
 }
