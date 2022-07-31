@@ -9,7 +9,7 @@ export const emailManager = {
             registrationParams.accountData.email,
             "Configuration of registration",
             `https://somesite.com/confirm-email?code=${registrationParams.emailConfirmation.confirmationCode}`,
-            link)
+            /*link*/)
     }
 }
 

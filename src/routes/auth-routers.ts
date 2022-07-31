@@ -36,11 +36,6 @@ authRouter.post('/registration-confirmation', checkLimitReq,
     async (req: Request, res: Response) => {
         const {code}: RegistrationConfirmationCodeModel = req.body
         const result = await authService.findUserForConfirm(code)
-        if(result === null) {
-            res.status(400).send(await usersCollection.find({}))
-            return
-        }
-
         if(result) {
             res.status(204).send('Email was verified. Account was activated')
             return

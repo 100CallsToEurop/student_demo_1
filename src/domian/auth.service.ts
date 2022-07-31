@@ -6,7 +6,7 @@ import {v4 as uuidv4} from "uuid";
 export const authService = {
     async findUserForConfirm(code: string){
         const user = await usersRepository.findByConfirmCode(code)
-        if(!user) return null
+        if(!user) return false
         return await this.confirmEmail(user, code)
     },
 
