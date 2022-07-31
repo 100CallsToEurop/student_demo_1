@@ -13,6 +13,8 @@ import {UserInputModel} from "../types/user.type";
 import {authService} from "../domian/auth.service";
 import {checkLimitReq} from "../middleware/checkLimitRequest-middleware";
 import {inputValidatorMiddleware} from "../middleware/input-validator-middleware";
+import {usersRepository} from "../repositories/users-repository-db";
+import {usersCollection} from "../repositories/db";
 
 export const authRouter = Router({})
 
@@ -34,6 +36,9 @@ authRouter.post('/registration-confirmation', checkLimitReq,
     async (req: Request, res: Response) => {
         const {code}: RegistrationConfirmationCodeModel = req.body
         const result = await authService.findUserForConfirm(code)
+        if(result === null) {}
+        res.status(400).send(await usersCollection.find({}))
+        return
         if(result) {
             res.status(204).send('Email was verified. Account was activated')
             return

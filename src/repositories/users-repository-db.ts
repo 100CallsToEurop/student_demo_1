@@ -64,7 +64,7 @@ export const usersRepository = {
     },
 
     async findByConfirmCode(code: string): Promise<UserAccount | null>{
-        const user = await usersCollection.findOne({"emailConfirmation.confirmationCode": code} )
+        const user = await usersCollection.findOne({emailConfirmation: {confirmationCode: code}} )
         if(user) return user
         return null
     },
