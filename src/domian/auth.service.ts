@@ -13,6 +13,7 @@ export const authService = {
     async findUserByEmail(email: string){
         const user = await usersRepository.findUserByEmail(email)
         if(!user) return false
+        if(user.emailConfirmation.isConfirmed) return false
         user.emailConfirmation.confirmationCode = uuidv4()
         try{
             await emailManager.sendEmailConfirmationMessage(user)
@@ -31,7 +32,6 @@ export const authService = {
    async confirmEmail(user:UserAccount, code: string){
        if(user.emailConfirmation.isConfirmed) return false
        if(user.emailConfirmation.confirmationCode !== code) return false
-       console.log(11)
        if(user.emailConfirmation.expirationDate < new Date()) return false
 
        const result = await usersRepository.updateConfirmationCode(user._id)
