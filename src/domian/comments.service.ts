@@ -18,8 +18,11 @@ export const commentsService= {
         postId: ObjectId,
         createParam: CommentInputModel
     ):Promise<CommentViewModel | null> {
+        console.log(1)
         const user = await usersService.findUserById(userId)
+        console.log(2)
         const posts = await postsService.getPostById(postId)
+        console.log(3)
         if (!posts) return null
         const newComment: CommentModel = {
             _id: new ObjectId(),
