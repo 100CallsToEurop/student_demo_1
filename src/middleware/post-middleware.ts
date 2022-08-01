@@ -22,7 +22,7 @@ export const contentValidation = body('content')
     .withMessage('Max 1000 symbols')
 
 export const bloggerIdValidation = body('bloggerId')
-    .isNumeric()
+    //.isNumeric()
     .exists()
     .notEmpty()
     .withMessage('bloggerId must be numeric')

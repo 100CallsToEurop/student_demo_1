@@ -24,10 +24,10 @@ export const commentsService= {
         const newComment: CommentModel = {
             _id: new ObjectId(),
             content: createParam.content,
-            userId: userId.toString(),
+            userId: userId,
             userLogin: user!.login,
             addedAt: (new Date()).toString(),
-            postId: postId.toString()
+            postId: postId
         }
         await commentsRepository.createComments(newComment)
         return {

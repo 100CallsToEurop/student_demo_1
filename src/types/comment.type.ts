@@ -7,18 +7,18 @@ export type CommentInputModel = {
 }
 export type CommentViewModel = CommentInputModel & {
     id: string,
-    userId: string
+    userId: ObjectId
     userLogin: string
     addedAt: string
 }
 
 export type CommentModel = {
     _id: ObjectId
-    userId: string
+    userId: ObjectId
     content: string
     userLogin: string
     addedAt: string
-    postId: string
+    postId: ObjectId
 }
 
 export type CommentQuery = Query & {
