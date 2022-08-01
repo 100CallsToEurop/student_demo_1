@@ -60,7 +60,7 @@ export const commentsService= {
         return {
             id: comment._id.toString(),
             content: comment.content,
-            userId: comment.postId,
+            userId: comment.userId,
             userLogin: comment.userLogin,
             addedAt: comment.addedAt
         }
