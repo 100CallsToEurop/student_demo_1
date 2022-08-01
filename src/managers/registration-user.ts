@@ -8,8 +8,8 @@ export const emailManager = {
         await emailAdapter.sendEmail(
             registrationParams.accountData.email,
             "Configuration of registration",
-            "Follow the link to confirm your registration",
-            link)
+            `https://somesite.com/confirm-email?code=${registrationParams.emailConfirmation.confirmationCode}`,
+            /*link*/)
     }
 }
 
