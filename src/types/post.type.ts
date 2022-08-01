@@ -6,7 +6,7 @@ export type PostInputModel  = {
     title: string,
     shortDescription: string,
     content: string,
-    bloggerId: ObjectId,
+    bloggerId: string,
 }
 
 export type PostViewModel = PostInputModel & {
@@ -19,7 +19,7 @@ export type PostModel = {
     title: string,
     shortDescription: string,
     content: string,
-    bloggerId: ObjectId,
+    bloggerId: string,
     bloggerName: string
 }
 

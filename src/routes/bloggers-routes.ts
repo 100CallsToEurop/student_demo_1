@@ -84,7 +84,7 @@ bloggersRouter.post('/:bloggerId/posts',
     contentValidation,
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
-        const bloggerId = new ObjectId(req.params.bloggerId)
+        const bloggerId = req.params.bloggerId
         const {title, shortDescription, content}: BloggerPostInputModel  = req.body
         const newBlogPost = await postsService.createPost({title, shortDescription, content, bloggerId})
        if(newBlogPost) {

@@ -49,8 +49,8 @@ postsRouter.post('/',
     bloggerIdValidation,
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
-    const {title, shortDescription, content, bloggerId }  = req.body
-    const newPosts = await postsService.createPost({title, shortDescription, content, bloggerId })
+    const {title, shortDescription, content, bloggerId}  = req.body
+    const newPosts = await postsService.createPost({title, shortDescription, content, bloggerId})
         if(newPosts === null) {
             res.status(400).send({errorsMessages: [{message: "Not found", field: "bloggerId"}]})
             return
@@ -88,7 +88,7 @@ postsRouter.put('/:id',
 //for comments
 
 postsRouter.get('/:postId/comments', async (req: Request, res: Response) => {
-    const postId = new ObjectId(req.params.postId)
+    const postId = req.params.postId
     const {PageNumber, PageSize}: CommentQuery = req.query
     const comments = await commentsService.getComments({postId, PageNumber, PageSize})
     if (comments) {

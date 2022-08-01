@@ -24,10 +24,10 @@ export const commentsService= {
         const newComment: CommentModel = {
             _id: new ObjectId(),
             content: createParam.content,
-            userId: userId,
+            userId: userId.toString(),
             userLogin: user!.login,
             addedAt: (new Date()).toString(),
-            postId: postId
+            postId: postId.toString()
         }
         await commentsRepository.createComments(newComment)
         return {
@@ -42,7 +42,7 @@ export const commentsService= {
 
     async getComments(queryParams: CommentQuery): Promise<PaginationComments | null>{
         if(queryParams.postId !== undefined) {
-            const posts = await postsService.getPostById(queryParams.postId)
+            const posts = await postsService.getPostById(new ObjectId(queryParams.postId))
             if (!posts) return null
         }
         return await commentsRepository.getComments(queryParams)

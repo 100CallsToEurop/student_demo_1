@@ -34,8 +34,10 @@ export const postsService = {
 
     },
     async createPost(createParam: PostInputModel):Promise<PostViewModel | null>  {
+
         const blogger = await bloggersService.getBloggerById(new ObjectId(createParam.bloggerId))
         if(!blogger) return null
+
         const newPost: PostModel = {
             ...createParam,
             _id: new ObjectId(),
